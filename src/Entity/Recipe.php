@@ -16,9 +16,9 @@ class Recipe
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'title')]
+    #[ORM\ManyToOne(inversedBy: 'recipes')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $id_user = null;
+    private ?User $idUser = null;
 
     #[ORM\Column(length: 255)]
     private ?string $title = null;
@@ -26,13 +26,13 @@ class Recipe
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $prep_time = null;
+    #[ORM\Column]
+    private ?int $prep_time = null;
 
-    #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $cook_time = null;
+    #[ORM\Column(nullable: true)]
+    private ?int $cook_time = null;
 
-    #[ORM\Column(length: 511, nullable: true)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $thumbnail = null;
 
     #[ORM\Column]
@@ -41,30 +41,22 @@ class Recipe
     #[ORM\Column]
     private ?\DateTimeImmutable $updated_at = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $deleted_at = null;
+    #[ORM\ManyToMany(targetEntity: Ingredients::class, mappedBy: 'idRecipe')]
+    private Collection $ingredients;
 
-    #[ORM\OneToOne(mappedBy: 'id_recipe', cascade: ['persist', 'remove'])]
-    private ?Favorite $favorite = null;
+    #[ORM\ManyToMany(targetEntity: Ustensil::class, mappedBy: 'idRecipe')]
+    private Collection $ustensils;
 
-    #[ORM\OneToMany(mappedBy: 'id_recipe', targetEntity: Partition::class, orphanRemoval: true)]
-    private Collection $partitions;
+    #[ORM\ManyToOne(inversedBy: 'idRecipe')]
+    private ?Instructions $instructions = null;
 
-    #[ORM\ManyToOne(inversedBy: 'id_recipe')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?UstensilRecipe $ustensilRecipe = null;
-
-    #[ORM\OneToMany(mappedBy: 'id_recipe', targetEntity: UstensilRecipe::class, orphanRemoval: true)]
-    private Collection $ustensilRecipes;
-
-    #[ORM\OneToMany(mappedBy: 'id_recipe', targetEntity: RecipeIngredients::class, orphanRemoval: true)]
-    private Collection $recipeIngredients;
+    #[ORM\OneToOne(mappedBy: 'idRecipe', cascade: ['persist', 'remove'])]
+    private ?Favorites $favorites = null;
 
     public function __construct()
     {
-        $this->partitions = new ArrayCollection();
-        $this->ustensilRecipes = new ArrayCollection();
-        $this->recipeIngredients = new ArrayCollection();
+        $this->ingredients = new ArrayCollection();
+        $this->ustensils = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -74,12 +66,12 @@ class Recipe
 
     public function getIdUser(): ?User
     {
-        return $this->id_user;
+        return $this->idUser;
     }
 
-    public function setIdUser(?User $id_user): static
+    public function setIdUser(?User $idUser): static
     {
-        $this->id_user = $id_user;
+        $this->idUser = $idUser;
 
         return $this;
     }
@@ -108,24 +100,24 @@ class Recipe
         return $this;
     }
 
-    public function getPrepTime(): ?\DateTimeInterface
+    public function getPrepTime(): ?int
     {
         return $this->prep_time;
     }
 
-    public function setPrepTime(?\DateTimeInterface $prep_time): static
+    public function setPrepTime(int $prep_time): static
     {
         $this->prep_time = $prep_time;
 
         return $this;
     }
 
-    public function getCookTime(): ?\DateTimeInterface
+    public function getCookTime(): ?int
     {
         return $this->cook_time;
     }
 
-    public function setCookTime(?\DateTimeInterface $cook_time): static
+    public function setCookTime(?int $cook_time): static
     {
         $this->cook_time = $cook_time;
 
@@ -168,138 +160,85 @@ class Recipe
         return $this;
     }
 
-    public function getDeletedAt(): ?\DateTimeImmutable
+    /**
+     * @return Collection<int, Ingredients>
+     */
+    public function getIngredients(): Collection
     {
-        return $this->deleted_at;
+        return $this->ingredients;
     }
 
-    public function setDeletedAt(?\DateTimeImmutable $deleted_at): static
+    public function addIngredient(Ingredients $ingredient): static
     {
-        $this->deleted_at = $deleted_at;
+        if (!$this->ingredients->contains($ingredient)) {
+            $this->ingredients->add($ingredient);
+            $ingredient->addIdRecipe($this);
+        }
 
         return $this;
     }
 
-    public function getFavorite(): ?Favorite
+    public function removeIngredient(Ingredients $ingredient): static
     {
-        return $this->favorite;
-    }
-
-    public function setFavorite(?Favorite $favorite): static
-    {
-        // unset the owning side of the relation if necessary
-        if ($favorite === null && $this->favorite !== null) {
-            $this->favorite->setIdRecipe(null);
+        if ($this->ingredients->removeElement($ingredient)) {
+            $ingredient->removeIdRecipe($this);
         }
 
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Ustensil>
+     */
+    public function getUstensils(): Collection
+    {
+        return $this->ustensils;
+    }
+
+    public function addUstensil(Ustensil $ustensil): static
+    {
+        if (!$this->ustensils->contains($ustensil)) {
+            $this->ustensils->add($ustensil);
+            $ustensil->addIdRecipe($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUstensil(Ustensil $ustensil): static
+    {
+        if ($this->ustensils->removeElement($ustensil)) {
+            $ustensil->removeIdRecipe($this);
+        }
+
+        return $this;
+    }
+
+    public function getInstructions(): ?Instructions
+    {
+        return $this->instructions;
+    }
+
+    public function setInstructions(?Instructions $instructions): static
+    {
+        $this->instructions = $instructions;
+
+        return $this;
+    }
+
+    public function getFavorites(): ?Favorites
+    {
+        return $this->favorites;
+    }
+
+    public function setFavorites(Favorites $favorites): static
+    {
         // set the owning side of the relation if necessary
-        if ($favorite !== null && $favorite->getIdRecipe() !== $this) {
-            $favorite->setIdRecipe($this);
+        if ($favorites->getIdRecipe() !== $this) {
+            $favorites->setIdRecipe($this);
         }
 
-        $this->favorite = $favorite;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Partition>
-     */
-    public function getPartitions(): Collection
-    {
-        return $this->partitions;
-    }
-
-    public function addPartition(Partition $partition): static
-    {
-        if (!$this->partitions->contains($partition)) {
-            $this->partitions->add($partition);
-            $partition->setIdRecipe($this);
-        }
-
-        return $this;
-    }
-
-    public function removePartition(Partition $partition): static
-    {
-        if ($this->partitions->removeElement($partition)) {
-            // set the owning side to null (unless already changed)
-            if ($partition->getIdRecipe() === $this) {
-                $partition->setIdRecipe(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getUstensilRecipe(): ?UstensilRecipe
-    {
-        return $this->ustensilRecipe;
-    }
-
-    public function setUstensilRecipe(?UstensilRecipe $ustensilRecipe): static
-    {
-        $this->ustensilRecipe = $ustensilRecipe;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, UstensilRecipe>
-     */
-    public function getUstensilRecipes(): Collection
-    {
-        return $this->ustensilRecipes;
-    }
-
-    public function addUstensilRecipe(UstensilRecipe $ustensilRecipe): static
-    {
-        if (!$this->ustensilRecipes->contains($ustensilRecipe)) {
-            $this->ustensilRecipes->add($ustensilRecipe);
-            $ustensilRecipe->setIdRecipe($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUstensilRecipe(UstensilRecipe $ustensilRecipe): static
-    {
-        if ($this->ustensilRecipes->removeElement($ustensilRecipe)) {
-            // set the owning side to null (unless already changed)
-            if ($ustensilRecipe->getIdRecipe() === $this) {
-                $ustensilRecipe->setIdRecipe(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, RecipeIngredients>
-     */
-    public function getRecipeIngredients(): Collection
-    {
-        return $this->recipeIngredients;
-    }
-
-    public function addRecipeIngredient(RecipeIngredients $recipeIngredient): static
-    {
-        if (!$this->recipeIngredients->contains($recipeIngredient)) {
-            $this->recipeIngredients->add($recipeIngredient);
-            $recipeIngredient->setIdRecipe($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRecipeIngredient(RecipeIngredients $recipeIngredient): static
-    {
-        if ($this->recipeIngredients->removeElement($recipeIngredient)) {
-            // set the owning side to null (unless already changed)
-            if ($recipeIngredient->getIdRecipe() === $this) {
-                $recipeIngredient->setIdRecipe(null);
-            }
-        }
+        $this->favorites = $favorites;
 
         return $this;
     }

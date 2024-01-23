@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UstensilRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: UstensilRepository::class)]
@@ -16,11 +18,13 @@ class Ustensil
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
-    #[ORM\OneToOne(mappedBy: 'id', cascade: ['persist', 'remove'])]
-    private ?UstensilRecipe $ustensilRecipe = null;
+    #[ORM\ManyToMany(targetEntity: Recipe::class, inversedBy: 'ustensils')]
+    private Collection $idRecipe;
 
-    #[ORM\OneToOne(mappedBy: 'id_ustensil', cascade: ['persist', 'remove'])]
-    private ?UstensilRecipe $id_ustensil = null;
+    public function __construct()
+    {
+        $this->idRecipe = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -39,36 +43,26 @@ class Ustensil
         return $this;
     }
 
-    public function getUstensilRecipe(): ?UstensilRecipe
+    /**
+     * @return Collection<int, Recipe>
+     */
+    public function getIdRecipe(): Collection
     {
-        return $this->ustensilRecipe;
+        return $this->idRecipe;
     }
 
-    public function setUstensilRecipe(UstensilRecipe $ustensilRecipe): static
+    public function addIdRecipe(Recipe $idRecipe): static
     {
-        // set the owning side of the relation if necessary
-        if ($ustensilRecipe->getId() !== $this) {
-            $ustensilRecipe->setId($this);
+        if (!$this->idRecipe->contains($idRecipe)) {
+            $this->idRecipe->add($idRecipe);
         }
-
-        $this->ustensilRecipe = $ustensilRecipe;
 
         return $this;
     }
 
-    public function getIdUstensil(): ?UstensilRecipe
+    public function removeIdRecipe(Recipe $idRecipe): static
     {
-        return $this->id_ustensil;
-    }
-
-    public function setIdUstensil(UstensilRecipe $id_ustensil): static
-    {
-        // set the owning side of the relation if necessary
-        if ($id_ustensil->getIdUstensil() !== $this) {
-            $id_ustensil->setIdUstensil($this);
-        }
-
-        $this->id_ustensil = $id_ustensil;
+        $this->idRecipe->removeElement($idRecipe);
 
         return $this;
     }
