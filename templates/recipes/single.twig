@@ -1,0 +1,11 @@
+{% extends "base.twig" %}
+
+{% block body %}
+	<h1>{{ recipe.title }}</h1>
+	<p><i>{{ recipe.description }}</i></p>
+
+	<hr>
+
+	<p>Préparation: {{ recipe.prepTime }} mins</p>
+	<p>Cuisson: {{ recipe.cookTime }} mins</p>
+{% endblock %}

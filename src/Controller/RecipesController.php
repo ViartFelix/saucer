@@ -71,4 +71,14 @@ class RecipesController extends AbstractController
 			"form" => $form,
 		]);
 	}
+
+	//Voir une seule recette
+	#[Route('/recipes/{id}', name: 'app_recipes_single')]
+	public function single(Recipe $recipe): Response
+	{
+		//Single recette
+		return $this->render('recipes/single.twig', [
+			"recipe" => $recipe,
+		]);
+	}
 }

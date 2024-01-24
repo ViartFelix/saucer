@@ -20,6 +20,7 @@
 					<li><i>{{ recipe.description }}</i></li>
 					<li>{{ recipe.prepTime }}</li>
 					<li>{{ recipe.cookTime }}</li>
+					<li><a href="{{ path('app_recipes_single', {'id': recipe.id}) }}">Voir</a></li>
 				</ul>
 			{% endfor %}
 		</div>
