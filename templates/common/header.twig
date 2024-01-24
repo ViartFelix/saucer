@@ -1,0 +1,21 @@
+{# templates/common/header.twig #}
+
+<header>
+    <div class="header-container">
+		<a href="/">
+			<img class="main-icon" src="{{ asset('assets/img/icon.png') }}"  alt="Saucer."/>
+		</a>
+
+		<a href="/register">
+			Register
+		</a>
+
+		<a href="/login">
+			Login
+		</a>
+
+		{% if is_granted('ROLE_USER') or is_granted('ROLE_NO_VERIFY') %}
+			<a href="/logout">Logout</a>
+		{% endif %}
+    </div>
+</header>

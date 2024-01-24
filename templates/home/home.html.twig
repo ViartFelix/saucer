@@ -1,3 +1,14 @@
+{% extends "base.twig" %}
+
+{% block body %}
 <h1>
     Bonsoir :)
 </h1>
+
+	{% if is_granted('ROLE_USER') or is_granted('ROLE_NO_VERIFY') %}
+		User: {{ user.userIdentifier() }}
+	{% else %}
+		No user logged in.
+	{% endif %}
+
+{% endblock %}

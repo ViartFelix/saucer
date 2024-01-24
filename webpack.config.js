@@ -7,11 +7,12 @@ if (!Encore.isRuntimeEnvironmentConfigured()) {
 }
 
 let jsEntry = {
-    app: "app.js"
+    main: "app.js"
 }
 
 let scssEntry = {
-    scss: "header/header.scss"
+    header: "header/header.scss",
+    common: "common/common.scss"
 }
 
 Encore

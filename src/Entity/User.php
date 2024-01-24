@@ -7,10 +7,15 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+
+use DateTimeImmutable;
+
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -30,19 +35,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $nom = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $prenom = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $user = null;
-
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $pwd = null;
-
-    #[ORM\Column]
+	#[ORM\Column]
     private ?bool $isVerified = null;
 
     #[ORM\Column]
@@ -51,7 +50,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?\DateTimeImmutable $updated_at = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $deleted_at = null;
 
     #[ORM\OneToMany(mappedBy: 'idUser', targetEntity: Recipe::class, orphanRemoval: true)]
@@ -64,6 +63,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->recipes = new ArrayCollection();
         $this->favorites = new ArrayCollection();
+
+		$this->setCreatedAt(DateTimeImmutable::createFromFormat('Y-m-d', date('Y-m-d')));
+		$this->setUpdatedAt(DateTimeImmutable::createFromFormat('Y-m-d', date('Y-m-d')));
     }
 
     public function getId(): ?int
@@ -156,30 +158,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPrenom(string $prenom): static
     {
         $this->prenom = $prenom;
-
-        return $this;
-    }
-
-    public function getUser(): ?string
-    {
-        return $this->user;
-    }
-
-    public function setUser(string $user): static
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    public function getPwd(): ?string
-    {
-        return $this->pwd;
-    }
-
-    public function setPwd(string $pwd): static
-    {
-        $this->pwd = $pwd;
 
         return $this;
     }
@@ -290,5 +268,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
     }
 }

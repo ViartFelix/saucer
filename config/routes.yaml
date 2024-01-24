@@ -3,3 +3,6 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+_symfony_logout:
+    resource: security.route_loader.logout
+    type: service
