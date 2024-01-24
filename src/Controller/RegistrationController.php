@@ -45,25 +45,34 @@ class RegistrationController extends AbstractController
 
 			$user->setIsVerified(false);
 			$user->setRoles([
-				''
+				'ROLE_NO_VERIFY'
 			]);
 
             $entityManager->persist($user);
             $entityManager->flush();
 
-			/*
-            // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
-                (new TemplatedEmail())
-                    ->from(new Address('viart.felix@gmail.com', 'Saucer Staff'))
-                    ->to($user->getEmail())
-                    ->subject('Please Confirm your Email')
-                    ->htmlTemplate('registration/confirmation_email.html.twig')
-            );
-            // do anything else you need here, like send an email
-			*/
+			$a = "";
 
-            return $this->redirectToRoute('app_home');
+            // generate a signed url and email it to the user
+			try {
+				$this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+					(new TemplatedEmail())
+						->from(new Address('viart.felix@gmail.com', 'Saucer Staff'))
+						->to($user->getEmail())
+						->subject('Please Confirm your Email')
+						->htmlTemplate('registration/confirmation_email.html.twig')
+				);
+
+				$a = "OK";
+			} catch (\Exception $e) {
+				// $a = $e->getMessage();
+				$a = "Erreur inconnue";
+			}
+
+            // do anything else you need here, like send an email
+            return $this->redirectToRoute('app_home', [
+				"status" => $a,
+			]);
         }
         return $this->render('registration/register.html.twig', [
 			'registrationForm' => $form->createView()
@@ -100,21 +109,3 @@ class RegistrationController extends AbstractController
         return $this->redirectToRoute('app_register');
     }
 }
-
-/**
- * {{ form_errors(registrationForm) }}
- *
- * {{ form_start(registrationForm) }}
- * {{ form_row(registrationForm.email) }}
- *
- *
- * {{ form_row(registrationForm.plainPassword, {
- * label: 'Password'
- * }) }}
- *
- * {{ form_row(registrationForm.agreeTerms) }}
- *
- * <button type="submit" class="btn">Register</button>
- * {{ form_end(registrationForm) }}
- *
- */

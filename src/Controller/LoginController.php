@@ -30,6 +30,8 @@ class LoginController extends AbstractController
 		// last username entered by the user
 		$lastUsername = $authenticationUtils->getLastUsername();
 
+		//user checker
+
 
         return $this->render('login/index.html.twig', [
             'controller_name' => 'LoginController',
@@ -37,10 +39,4 @@ class LoginController extends AbstractController
 			'error'         => $error,
         ]);
     }
-
-	#[Route('/logout', name: '')]
-public function logout()
-	{
-
-	}
 }

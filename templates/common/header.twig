@@ -6,16 +6,17 @@
 			<img class="main-icon" src="{{ asset('assets/img/icon.png') }}"  alt="Saucer."/>
 		</a>
 
-		<a href="/register">
-			Register
-		</a>
-
-		<a href="/login">
-			Login
-		</a>
-
-		{% if is_granted('ROLE_USER') or is_granted('ROLE_NO_VERIFY') %}
+		{% if is_granted('ROLE_USER') or is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
+			<a href="{{ path('app_profile') }}">Mon profil</a>
 			<a href="/logout">Logout</a>
+		{% else %}
+			<a href="/register">
+				Register
+			</a>
+
+			<a href="/login">
+				Login
+			</a>
 		{% endif %}
     </div>
 </header>
