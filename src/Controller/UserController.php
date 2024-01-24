@@ -46,7 +46,7 @@ class UserController extends AbstractController
 				"required" => false,
 			])
 			->add('prenom', TextType::class, [
-				"required" => true,
+				"required" => false,
 			])
 			->add('envoyer', SubmitType::class)
 			->getForm();

@@ -1,0 +1,17 @@
+{% extends "base.twig" %}
+
+{% block body %}
+	<h1>Nouvelle recette</h1>
+
+	{{ form_errors(form) }}
+
+	{{ form_start(form) }}
+		{{ form_row(form.title) }}
+		{{ form_row(form.description) }}
+		<hr/>
+		{{ form_row(form.prep_time) }}
+		{{ form_row(form.cook_time) }}
+		<hr/>
+		{{ form_row(form.envoyer) }}
+	{{ form_end(form) }}
+{% endblock %}

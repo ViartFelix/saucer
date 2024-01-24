@@ -48,11 +48,11 @@ class Recipe
     #[ORM\ManyToMany(targetEntity: Ustensil::class, mappedBy: 'idRecipe')]
     private Collection $ustensils;
 
-    #[ORM\ManyToOne(inversedBy: 'idRecipe')]
-    private ?Instructions $instructions = null;
-
     #[ORM\OneToOne(mappedBy: 'idRecipe', cascade: ['persist', 'remove'])]
     private ?Favorites $favorites = null;
+
+    #[ORM\OneToMany(mappedBy: 'id_recipe', targetEntity: Instructions::class)]
+    private Collection $instructions;
 
     public function __construct()
     {
@@ -61,6 +61,7 @@ class Recipe
 
 		$this->setCreatedAt(DateTimeImmutable::createFromFormat('Y-m-d', date('Y-m-d')));
 		$this->setUpdatedAt(DateTimeImmutable::createFromFormat('Y-m-d', date('Y-m-d')));
+  $this->instructions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -218,17 +219,6 @@ class Recipe
         return $this;
     }
 
-    public function getInstructions(): ?Instructions
-    {
-        return $this->instructions;
-    }
-
-    public function setInstructions(?Instructions $instructions): static
-    {
-        $this->instructions = $instructions;
-
-        return $this;
-    }
 
     public function getFavorites(): ?Favorites
     {
@@ -243,6 +233,36 @@ class Recipe
         }
 
         $this->favorites = $favorites;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Instructions>
+     */
+    public function getInstructions(): Collection
+    {
+        return $this->instructions;
+    }
+
+    public function addInstruction(Instructions $instruction): static
+    {
+        if (!$this->instructions->contains($instruction)) {
+            $this->instructions->add($instruction);
+            $instruction->setIdRecipe($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInstruction(Instructions $instruction): static
+    {
+        if ($this->instructions->removeElement($instruction)) {
+            // set the owning side to null (unless already changed)
+            if ($instruction->getIdRecipe() === $this) {
+                $instruction->setIdRecipe(null);
+            }
+        }
 
         return $this;
     }

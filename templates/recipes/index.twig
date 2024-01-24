@@ -1,0 +1,27 @@
+{% extends "base.twig" %}
+
+{% block body %}
+	Liste des recettes.
+	{% if(is_granted('ROLE_USER') or is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN')) %}
+		<a href="{{ path('app_recipes_create') }}">Nouvelle recette</a>
+	{% endif %}
+
+	{% if recipes|length <= 0 %}
+		<h1>Aucune recette à ce jour.</h1>
+
+		{% if(is_granted('ROLE_USER') or is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN')) %}
+			<h3><a href="{{ path('app_recipes_create') }}">Nouvelle recette</a></h3>
+		{% endif %}
+	{% else %}
+		<div style="display: grid; grid-template-columns: repeat(4, 20%); grid-column-gap: 20px">
+			{% for recipe in recipes %}
+				<ul>
+					<li><b>{{ recipe.title }}</b></li>
+					<li><i>{{ recipe.description }}</i></li>
+					<li>{{ recipe.prepTime }}</li>
+					<li>{{ recipe.cookTime }}</li>
+				</ul>
+			{% endfor %}
+		</div>
+	{% endif %}
+{% endblock %}
