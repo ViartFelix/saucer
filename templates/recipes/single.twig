@@ -1,6 +1,13 @@
 {% extends "base.twig" %}
 
 {% block body %}
+
+	{% if recipe.thumbnail %}
+		<img src="{{ asset('uploads/recipes/' ~ recipe.thumbnail) }}"/>
+	{% else %}
+		<h3>No thumbnail ?</h3>
+	{% endif %}
+
 	<h1>{{ recipe.title }}</h1>
 	<p><i>{{ recipe.description }}</i></p>
 
@@ -8,4 +15,8 @@
 
 	<p>Préparation: {{ recipe.prepTime }} mins</p>
 	<p>Cuisson: {{ recipe.cookTime }} mins</p>
+
+	<hr>
+
+
 {% endblock %}
