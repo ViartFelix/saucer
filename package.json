@@ -20,6 +20,7 @@
         "build": "encore production --progress"
     },
     "dependencies": {
+        "jquery": "^3.7.1",
         "maildev": "^2.1.0"
     }
 }

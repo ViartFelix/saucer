@@ -16,9 +16,6 @@ class Instructions
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\OneToMany(mappedBy: 'instructions', targetEntity: Recipe::class)]
-    private Collection $idRecipe;
-
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $content = null;
 
@@ -26,12 +23,7 @@ class Instructions
     private ?string $media = null;
 
     #[ORM\ManyToOne(inversedBy: 'instructions')]
-    private ?Recipe $id_recipe = null;
-
-    public function __construct()
-    {
-        $this->idRecipe = new ArrayCollection();
-    }
+    private ?Recipe $recipe = null;
 
     public function getId(): ?int
     {
@@ -41,32 +33,17 @@ class Instructions
     /**
      * @return Collection<int, Recipe>
      */
-    public function getIdRecipe(): Collection
+    public function getRecipe(): ?Recipe
     {
-        return $this->idRecipe;
+        return $this->recipe;
     }
 
-    public function addIdRecipe(Recipe $idRecipe): static
-    {
-        if (!$this->idRecipe->contains($idRecipe)) {
-            $this->idRecipe->add($idRecipe);
-            $idRecipe->setInstructions($this);
-        }
+	public function setRecipe(Recipe $recipe): static
+	{
+		$this->recipe = $recipe;
 
-        return $this;
-    }
-
-    public function removeIdRecipe(Recipe $idRecipe): static
-    {
-        if ($this->idRecipe->removeElement($idRecipe)) {
-            // set the owning side to null (unless already changed)
-            if ($idRecipe->getInstructions() === $this) {
-                $idRecipe->setInstructions(null);
-            }
-        }
-
-        return $this;
-    }
+		return $this;
+	}
 
     public function getContent(): ?string
     {
@@ -88,13 +65,6 @@ class Instructions
     public function setMedia(?string $media): static
     {
         $this->media = $media;
-
-        return $this;
-    }
-
-    public function setIdRecipe(?Recipe $id_recipe): static
-    {
-        $this->id_recipe = $id_recipe;
 
         return $this;
     }

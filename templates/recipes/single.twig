@@ -18,5 +18,18 @@
 
 	<hr>
 
+	<h2>Instructions</h2>
+
+	<ul>
+	{% for intru in inst %}
+		<li>
+			<div>
+				<img src="{{ asset('uploads/recipes/' ~ intru.media) }}">
+				{{ intru.content }}
+			</div>
+
+		</li>
+	{% endfor %}
+	</ul>
 
 {% endblock %}

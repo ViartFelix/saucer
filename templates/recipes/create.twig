@@ -14,6 +14,35 @@
 		<hr/>
 		{{ form_row(form.thumbnail) }}
 		<hr/>
+
+		<button type="button" class="add_item_link" data-collection-holder-class="instructions">Add a tag</button>
+		<!--<a href="#" id="add-button">Ajouter instruction</a>-->
+		<div
+			id="instructions">
+			{% for it in form.instructions %}
+				<div>{{ form_row(it) }}</div>
+			{% endfor %}
+		</div>
+
+		<div
+			data-index="{{ form.instructions|length > 0 ? form.instructions|last.vars.name + 1 : 0 }}"
+			data-prototype="{{ form_widget(form.instructions.vars.prototype)|e('html_attr') }}"
+			class="instructions">
+		</div>
+
+
+		<hr/>
 		{{ form_row(form.envoyer) }}
+
+
+
 	{{ form_end(form) }}
+
+
+
+	<span id="__last-ID__" style="display: none; opacity: 0">0</span>
+{% endblock %}
+
+{% block javascripts %}
+	{{ encore_entry_script_tags('recipe_single') }}
 {% endblock %}

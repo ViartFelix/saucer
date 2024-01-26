@@ -7,7 +7,8 @@ if (!Encore.isRuntimeEnvironmentConfigured()) {
 }
 
 let jsEntry = {
-    main: "app.js"
+    main: "app.js",
+	recipe_single: "recipe/single/index.js"
 }
 
 let scssEntry = {

@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Recipe;
+use App\Form\InstructionType;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -40,7 +42,16 @@ class RecipesController extends AbstractController
 
 		$form = $this->createFormBuilder($recipe)
 			->add('title', TextType::class, [
-				"required" => true,
+				"required" => false,
+			])
+			->add('instructions', CollectionType::class, [
+				"entry_type" => InstructionType::class,
+				'entry_options' => [
+					"required" => false,
+				],
+				'prototype' => true,
+				"allow_add" => true,
+				'by_reference' => false,
 			])
 			->add('description', TextareaType::class, [
 				"required" => false,
@@ -93,7 +104,23 @@ class RecipesController extends AbstractController
 					$newFilename,
 				);
 
+				//$instruction set thumbnail
 				$recipe->setThumbnail($newFilename);
+			}
+
+			foreach ($recipe->getInstructions() as $key => $instruction) {
+				$file = $form->get('instructions')[$key]->get('mediaFile')->getData();
+
+				$ogFileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+				$safeFilename = $slugger->slug($ogFileName);
+				$newFilename = $safeFilename.'-'.uniqid().'.'.$file->guessExtension();
+
+				$instruction->setMedia($newFilename);
+
+				$file->move(
+					$this->getParameter("photo_recipes"),
+					$newFilename,
+				);
 			}
 
 			$entityManager->persist($recipe);
@@ -114,6 +141,7 @@ class RecipesController extends AbstractController
 		//Single recette
 		return $this->render('recipes/single.twig', [
 			"recipe" => $recipe,
+			"inst" => $recipe->getInstructions(),
 		]);
 	}
 }

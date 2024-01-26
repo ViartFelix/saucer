@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: RecipeRepository::class)]
 class Recipe
@@ -22,6 +23,7 @@ class Recipe
     private ?User $idUser = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank()]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
@@ -51,7 +53,7 @@ class Recipe
     #[ORM\OneToOne(mappedBy: 'idRecipe', cascade: ['persist', 'remove'])]
     private ?Favorites $favorites = null;
 
-    #[ORM\OneToMany(mappedBy: 'id_recipe', targetEntity: Instructions::class)]
+    #[ORM\OneToMany(mappedBy: 'recipe', targetEntity: Instructions::class, cascade: ["persist"])]
     private Collection $instructions;
 
     public function __construct()
@@ -61,7 +63,7 @@ class Recipe
 
 		$this->setCreatedAt(DateTimeImmutable::createFromFormat('Y-m-d', date('Y-m-d')));
 		$this->setUpdatedAt(DateTimeImmutable::createFromFormat('Y-m-d', date('Y-m-d')));
-  $this->instructions = new ArrayCollection();
+  		$this->instructions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -249,7 +251,7 @@ class Recipe
     {
         if (!$this->instructions->contains($instruction)) {
             $this->instructions->add($instruction);
-            $instruction->setIdRecipe($this);
+            $instruction->setRecipe($this);
         }
 
         return $this;
@@ -259,8 +261,8 @@ class Recipe
     {
         if ($this->instructions->removeElement($instruction)) {
             // set the owning side to null (unless already changed)
-            if ($instruction->getIdRecipe() === $this) {
-                $instruction->setIdRecipe(null);
+            if ($instruction->getRecipe() === $this) {
+                $instruction->setRecipe(null);
             }
         }
 
