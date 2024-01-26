@@ -22,7 +22,7 @@ class Instructions
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $media = null;
 
-    #[ORM\ManyToOne(inversedBy: 'instructions')]
+    #[ORM\ManyToOne(cascade: ["persist"], inversedBy: 'instructions')]
     private ?Recipe $recipe = null;
 
     public function getId(): ?int

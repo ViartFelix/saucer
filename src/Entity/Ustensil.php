@@ -18,7 +18,7 @@ class Ustensil
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
-    #[ORM\ManyToMany(targetEntity: Recipe::class, inversedBy: 'ustensils')]
+    #[ORM\ManyToMany(targetEntity: Recipe::class, inversedBy: 'ustensils', cascade: ["persist"])]
     private Collection $idRecipe;
 
     public function __construct()

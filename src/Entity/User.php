@@ -42,7 +42,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $prenom = null;
 
 	#[ORM\Column]
-    private ?bool $isVerified = null;
+                   private ?bool $isVerified = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
@@ -56,8 +56,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'idUser', targetEntity: Recipe::class, orphanRemoval: true)]
     private Collection $recipes;
 
-    #[ORM\OneToMany(mappedBy: 'idUser', targetEntity: Favorites::class, orphanRemoval: true)]
-    private Collection $favorites;
+    #[ORM\ManyToMany(targetEntity: Recipe::class)]
+    private Collection $favoriteRecipes;
 
     public function __construct()
     {
@@ -66,6 +66,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
 		$this->setCreatedAt(DateTimeImmutable::createFromFormat('Y-m-d', date('Y-m-d')));
 		$this->setUpdatedAt(DateTimeImmutable::createFromFormat('Y-m-d', date('Y-m-d')));
+  $this->favoriteRecipes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -238,38 +239,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * @return Collection<int, Favorites>
-     */
-    public function getFavorites(): Collection
-    {
-        return $this->favorites;
-    }
-
-    public function addFavorite(Favorites $favorite): static
-    {
-        if (!$this->favorites->contains($favorite)) {
-            $this->favorites->add($favorite);
-            $favorite->setIdUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeFavorite(Favorites $favorite): static
-    {
-        if ($this->favorites->removeElement($favorite)) {
-            // set the owning side to null (unless already changed)
-            if ($favorite->getIdUser() === $this) {
-                $favorite->setIdUser(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function isVerified(): bool
     {
         return $this->isVerified;
+    }
+
+    /**
+     * @return Collection<int, Recipe>
+     */
+    public function getFavoriteRecipes(): Collection
+    {
+        return $this->favoriteRecipes;
+    }
+
+    public function addFavoriteRecipe(Recipe $favoriteRecipe): static
+    {
+        if (!$this->favoriteRecipes->contains($favoriteRecipe)) {
+            $this->favoriteRecipes->add($favoriteRecipe);
+        }
+
+        return $this;
+    }
+
+    public function removeFavoriteRecipe(Recipe $favoriteRecipe): static
+    {
+        $this->favoriteRecipes->removeElement($favoriteRecipe);
+
+        return $this;
     }
 }

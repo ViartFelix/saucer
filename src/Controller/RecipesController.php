@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Recipe;
+use App\Entity\Ustensil;
 use App\Form\InstructionType;
+use App\Form\UstensilType;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -53,6 +55,9 @@ class RecipesController extends AbstractController
 				"allow_add" => true,
 				'by_reference' => false,
 			])
+			->add('ustensils', null, [
+				'choice_label' => 'nom',
+			])
 			->add('description', TextareaType::class, [
 				"required" => false,
 			])
@@ -89,6 +94,7 @@ class RecipesController extends AbstractController
 		if ($form->isSubmitted() && $form->isValid()) {
 			//Set de l'ID user
 			$recipe->setIdUser($this->getUser());
+			//$ustensiles = $recipe->getUstensils();
 
 			$thumbnail = $form->get('thumbnail')->getData();
 
@@ -123,8 +129,20 @@ class RecipesController extends AbstractController
 				);
 			}
 
+			// Ajouter les ustensiles à la recette à partir des données du formulaire
+			foreach ($form->get('ustensils')->getData() as $ustensil) {
+				$recipe->addUstensil($ustensil);
+			}
+
 			$entityManager->persist($recipe);
-			$entityManager->flush();
+
+			try {
+				$entityManager->flush();
+			} catch (\Exception $e) {
+				// Gérer les exceptions ou les erreurs ici
+				dd($e->getMessage());
+				// Arrêtez l'exécution ou redirigez vers une page d'erreur
+			}
 
 			return $this->redirectToRoute('app_home');
 		}
@@ -141,7 +159,6 @@ class RecipesController extends AbstractController
 		//Single recette
 		return $this->render('recipes/single.twig', [
 			"recipe" => $recipe,
-			"inst" => $recipe->getInstructions(),
 		]);
 	}
 }

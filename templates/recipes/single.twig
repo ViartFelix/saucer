@@ -18,18 +18,30 @@
 
 	<hr>
 
+	<h2>Ustensiles</h2>
+
+	{% for ustensil in recipe.ustensils %}
+		<li>
+			{{ ustensil.nom }}
+		</li>
+	{% endfor %}
+
+	<hr>
+
 	<h2>Instructions</h2>
 
 	<ul>
-	{% for intru in inst %}
+	{% for instruction in recipe.instructions %}
 		<li>
 			<div>
-				<img src="{{ asset('uploads/recipes/' ~ intru.media) }}">
-				{{ intru.content }}
+				<img src="{{ asset('uploads/recipes/' ~ instruction.media) }}">
+				{{ instruction.content }}
 			</div>
 
 		</li>
 	{% endfor %}
 	</ul>
+
+	<hr>
 
 {% endblock %}

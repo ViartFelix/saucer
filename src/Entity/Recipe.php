@@ -44,14 +44,11 @@ class Recipe
     #[ORM\Column]
     private ?\DateTimeImmutable $updated_at = null;
 
-    #[ORM\ManyToMany(targetEntity: Ingredients::class, mappedBy: 'idRecipe')]
+    #[ORM\ManyToMany(targetEntity: Ingredients::class, mappedBy: 'idRecipe', cascade: ["persist"])]
     private Collection $ingredients;
 
-    #[ORM\ManyToMany(targetEntity: Ustensil::class, mappedBy: 'idRecipe')]
+    #[ORM\ManyToMany(targetEntity: Ustensil::class, mappedBy: 'idRecipe', cascade: ["persist"])]
     private Collection $ustensils;
-
-    #[ORM\OneToOne(mappedBy: 'idRecipe', cascade: ['persist', 'remove'])]
-    private ?Favorites $favorites = null;
 
     #[ORM\OneToMany(mappedBy: 'recipe', targetEntity: Instructions::class, cascade: ["persist"])]
     private Collection $instructions;
@@ -59,7 +56,7 @@ class Recipe
     public function __construct()
     {
         $this->ingredients = new ArrayCollection();
-        $this->ustensils = new ArrayCollection();
+		$this->ustensils = new ArrayCollection();
 
 		$this->setCreatedAt(DateTimeImmutable::createFromFormat('Y-m-d', date('Y-m-d')));
 		$this->setUpdatedAt(DateTimeImmutable::createFromFormat('Y-m-d', date('Y-m-d')));
@@ -179,7 +176,6 @@ class Recipe
     {
         if (!$this->ingredients->contains($ingredient)) {
             $this->ingredients->add($ingredient);
-            $ingredient->addIdRecipe($this);
         }
 
         return $this;
@@ -187,9 +183,7 @@ class Recipe
 
     public function removeIngredient(Ingredients $ingredient): static
     {
-        if ($this->ingredients->removeElement($ingredient)) {
-            $ingredient->removeIdRecipe($this);
-        }
+        $this->ingredients->removeElement($ingredient);
 
         return $this;
     }
@@ -204,10 +198,16 @@ class Recipe
 
     public function addUstensil(Ustensil $ustensil): static
     {
+		$this->ustensils->add($ustensil);
+		$ustensil->addIdRecipe($this);
+
+		/*
         if (!$this->ustensils->contains($ustensil)) {
             $this->ustensils->add($ustensil);
+			dd($this, $this->ustensils);
             $ustensil->addIdRecipe($this);
         }
+		*/
 
         return $this;
     }
@@ -217,24 +217,6 @@ class Recipe
         if ($this->ustensils->removeElement($ustensil)) {
             $ustensil->removeIdRecipe($this);
         }
-
-        return $this;
-    }
-
-
-    public function getFavorites(): ?Favorites
-    {
-        return $this->favorites;
-    }
-
-    public function setFavorites(Favorites $favorites): static
-    {
-        // set the owning side of the relation if necessary
-        if ($favorites->getIdRecipe() !== $this) {
-            $favorites->setIdRecipe($this);
-        }
-
-        $this->favorites = $favorites;
 
         return $this;
     }
