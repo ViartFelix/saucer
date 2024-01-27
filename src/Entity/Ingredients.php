@@ -18,7 +18,7 @@ class Ingredients
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
-    #[ORM\ManyToMany(targetEntity: Recipe::class, inversedBy: 'ingredients')]
+    #[ORM\ManyToMany(targetEntity: Recipe::class, inversedBy: 'ingredients', cascade: ["persist"])]
     private Collection $idRecipe;
 
     public function __construct()
@@ -51,6 +51,7 @@ class Ingredients
         return $this->idRecipe;
     }
 
+	//TODO: les ingredients sont rajoutés même s'ils existent.
     public function addIdRecipe(Recipe $idRecipe): static
     {
         if (!$this->idRecipe->contains($idRecipe)) {

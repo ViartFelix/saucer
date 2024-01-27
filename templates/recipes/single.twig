@@ -20,11 +20,25 @@
 
 	<h2>Ustensiles</h2>
 
-	{% for ustensil in recipe.ustensils %}
-		<li>
-			{{ ustensil.nom }}
-		</li>
-	{% endfor %}
+	<ul>
+		{% for ustensil in recipe.ustensils %}
+			<li>
+				{{ ustensil.nom }}
+			</li>
+		{% endfor %}
+	</ul>
+
+	<hr>
+
+	<h2>Ingredients</h2>
+
+	<ul>
+		{% for ingredient in recipe.ingredients %}
+			<li>
+				{{ ingredient.nom }}
+			</li>
+		{% endfor %}
+	</ul>
 
 	<hr>
 

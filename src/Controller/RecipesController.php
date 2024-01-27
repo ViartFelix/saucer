@@ -4,9 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Recipe;
 use App\Entity\Ustensil;
+use App\Form\IngredientType;
 use App\Form\InstructionType;
 use App\Form\UstensilType;
-use DateTimeImmutable;
+
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -21,6 +22,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Validator\Constraints\File;
+
+use DateTimeImmutable;
 
 class RecipesController extends AbstractController
 {
@@ -58,6 +61,16 @@ class RecipesController extends AbstractController
 			->add('ustensils', null, [
 				'choice_label' => 'nom',
 			])
+			->add('ingredients', CollectionType::class, [
+				"entry_type" => IngredientType::class,
+				'entry_options' => [
+					"required" => false,
+				],
+				'prototype' => true,
+				"allow_add" => true,
+				'by_reference' => false,
+				//'choice_label' => 'nom',
+			])
 			->add('description', TextareaType::class, [
 				"required" => false,
 			])
@@ -88,6 +101,23 @@ class RecipesController extends AbstractController
 			])
 			->add('envoyer', SubmitType::class)
 			->getForm();
+
+			/*
+			 * <button type="button" class="add_item_link" data-collection-holder-class="ingredients">Ajouter ingredient</button>
+		<!--<a href="#" id="add-button">Ajouter instruction</a>-->
+		<div
+			id="ingredients">
+			{% for it in form.ingredients %}
+				<div>{{ form_row(it) }}</div>
+			{% endfor %}
+		</div>
+
+		<div
+			data-index="{{ form.ingredients|length > 0 ? form.ingredients|last.vars.name + 1 : 0 }}"
+			data-prototype="{{ form_widget(form.ingredients.vars.prototype)|e('html_attr') }}"
+			class="ingredients">
+		</div>
+			 */
 
 		$form->handleRequest($request);
 
@@ -132,6 +162,10 @@ class RecipesController extends AbstractController
 			// Ajouter les ustensiles à la recette à partir des données du formulaire
 			foreach ($form->get('ustensils')->getData() as $ustensil) {
 				$recipe->addUstensil($ustensil);
+			}
+
+			foreach($form->get('ingredients')->getData() as $ingredient) {
+				$recipe->addIngredient($ingredient);
 			}
 
 			$entityManager->persist($recipe);

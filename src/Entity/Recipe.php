@@ -57,10 +57,11 @@ class Recipe
     {
         $this->ingredients = new ArrayCollection();
 		$this->ustensils = new ArrayCollection();
+		$this->instructions = new ArrayCollection();
 
 		$this->setCreatedAt(DateTimeImmutable::createFromFormat('Y-m-d', date('Y-m-d')));
 		$this->setUpdatedAt(DateTimeImmutable::createFromFormat('Y-m-d', date('Y-m-d')));
-  		$this->instructions = new ArrayCollection();
+
     }
 
     public function getId(): ?int
@@ -178,6 +179,8 @@ class Recipe
             $this->ingredients->add($ingredient);
         }
 
+		$ingredient->addIdRecipe($this);
+
         return $this;
     }
 
@@ -198,16 +201,11 @@ class Recipe
 
     public function addUstensil(Ustensil $ustensil): static
     {
-		$this->ustensils->add($ustensil);
-		$ustensil->addIdRecipe($this);
-
-		/*
         if (!$this->ustensils->contains($ustensil)) {
             $this->ustensils->add($ustensil);
-			dd($this, $this->ustensils);
-            $ustensil->addIdRecipe($this);
         }
-		*/
+
+		$ustensil->addIdRecipe($this);
 
         return $this;
     }
