@@ -254,9 +254,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function addFavoriteRecipe(Recipe $favoriteRecipe): static
     {
-        if (!$this->favoriteRecipes->contains($favoriteRecipe)) {
-            $this->favoriteRecipes->add($favoriteRecipe);
-        }
+        //if (!$this->favoriteRecipes->contains($favoriteRecipe)) {
+        $this->favoriteRecipes->add($favoriteRecipe);
+        //}
+
 
         return $this;
     }

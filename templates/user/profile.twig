@@ -3,4 +3,23 @@
 {% block body %}
 	Ton profil
 	<a href="{{ path('app_profile_edit') }}">Editer mon profil</a>
+
+	<hr>
+
+	<h2>Favoris</h2>
+	<ul>
+		{% for fav in favorites %}
+			<li><a href="{{ path('app_recipes_single', {'id': fav.id}) }}">{{ fav.title }}</a></li>
+		{% endfor %}
+	</ul>
+
+	<hr>
+	<h2>Mes recettes</h2>
+
+	<ul>
+		{% for recipe in user.recipes %}
+			<li><a href="{{ path('app_recipes_single', {'id': recipe.id}) }}">{{ recipe.title }}</a></li>
+		{% endfor %}
+	</ul>
+
 {% endblock %}

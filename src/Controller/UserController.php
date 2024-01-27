@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -26,14 +27,20 @@ class UserController extends AbstractController
     public function index(): Response
     {
         return $this->render('user/index.html.twig', [
-            'controller_name' => 'UserController',
         ]);
     }
 
 	#[Route('/profile', name: 'app_profile')]
 	public function profile(): Response
 	{
-		return $this->render('user/profile.twig');
+		$user = $this->getUser();
+		$favs = $user->getFavoriteRecipes();
+		$recipes = $user->getRecipes();
+
+		return $this->render('user/profile.twig',[
+			"user" => $user,
+			"favorites" => $favs,
+		]);
 	}
 
 	#[Route('/profile/edit', name: 'app_profile_edit')]

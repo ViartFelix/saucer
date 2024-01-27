@@ -18,6 +18,18 @@
 
 	<hr>
 
+	<h2>Favori ?</h2>
+	{% if favorite %}
+		Favori
+	{% else %}
+		Mettre en favori
+	{% endif %}
+
+	<br/>
+
+		<a href="{{ path('app_recipes_favorite', {'id': recipe.id}) }}">Favori</a>
+	<hr>
+
 	<h2>Ustensiles</h2>
 
 	<ul>

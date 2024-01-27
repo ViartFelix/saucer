@@ -8,6 +8,7 @@ use App\Form\IngredientType;
 use App\Form\InstructionType;
 use App\Form\UstensilType;
 
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -16,6 +17,7 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -195,9 +197,39 @@ class RecipesController extends AbstractController
 	#[Route('/recipes/{id}', name: 'app_recipes_single')]
 	public function single(Recipe $recipe): Response
 	{
+
+		$hasFavorite = $this->getUser()->getFavoriteRecipes()->contains($recipe);
+
 		//Single recette
 		return $this->render('recipes/single.twig', [
 			"recipe" => $recipe,
+			"favorite" => $hasFavorite,
+		]);
+	}
+	#[Route('/recipes/{id}/favorite', name: 'app_recipes_favorite')]
+	#[IsGranted('ROLE_USER')]
+	public function toggleFav(Recipe $recipe, int $id, EntityManagerInterface $entityManager)//: RedirectResponse
+	{
+		$user = $this->getUser();
+		$hasFavorite = $user->getFavoriteRecipes()->contains($recipe);
+
+		if($hasFavorite) {
+			$this->getUser()->removeFavoriteRecipe($recipe);
+		}
+		else {
+			$this->getUser()->addFavoriteRecipe($recipe);
+		}
+
+		$entityManager->persist($user);
+
+		try {
+			$entityManager->flush();
+		} catch (\Exception $e) {
+			dd($e->getMessage());
+		}
+
+		return $this->redirectToRoute("app_recipes_single",[
+			"id" => $id
 		]);
 	}
 }
