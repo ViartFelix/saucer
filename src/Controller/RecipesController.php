@@ -147,16 +147,21 @@ class RecipesController extends AbstractController
 			foreach ($recipe->getInstructions() as $key => $instruction) {
 				$file = $form->get('instructions')[$key]->get('mediaFile')->getData();
 
-				$ogFileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-				$safeFilename = $slugger->slug($ogFileName);
-				$newFilename = $safeFilename.'-'.uniqid().'.'.$file->guessExtension();
+				if(isset($file))
+				{
+					$ogFileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+					$safeFilename = $slugger->slug($ogFileName);
+					$newFilename = $safeFilename.'-'.uniqid().'.'.$file->guessExtension();
 
-				$instruction->setMedia($newFilename);
+					$instruction->setMedia($newFilename);
 
-				$file->move(
-					$this->getParameter("photo_recipes"),
-					$newFilename,
-				);
+					$file->move(
+						$this->getParameter("photo_recipes"),
+						$newFilename,
+					);
+				}
+
+
 			}
 
 			// Ajouter les ustensiles à la recette à partir des données du formulaire
