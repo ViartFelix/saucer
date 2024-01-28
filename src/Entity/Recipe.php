@@ -44,8 +44,10 @@ class Recipe
     #[ORM\Column]
     private ?\DateTimeImmutable $updated_at = null;
 
+	/*
     #[ORM\ManyToMany(targetEntity: Ingredients::class, mappedBy: 'idRecipe', cascade: ["persist"])]
     private Collection $ingredients;
+	*/
 
     #[ORM\ManyToMany(targetEntity: Ustensil::class, mappedBy: 'idRecipe', cascade: ["persist"])]
     private Collection $ustensils;
@@ -53,14 +55,19 @@ class Recipe
     #[ORM\OneToMany(mappedBy: 'recipe', targetEntity: Instructions::class, cascade: ["persist"])]
     private Collection $instructions;
 
+    #[ORM\OneToMany(mappedBy: 'recipe', targetEntity: RecipeIngredient::class, cascade: ["persist"], fetch: 'EXTRA_LAZY')]
+    private Collection $recipeIngredients;
+
     public function __construct()
     {
-        $this->ingredients = new ArrayCollection();
+        //$this->ingredients = new ArrayCollection();
 		$this->ustensils = new ArrayCollection();
 		$this->instructions = new ArrayCollection();
+		$this->recipeIngredients = new ArrayCollection();
 
 		$this->setCreatedAt(DateTimeImmutable::createFromFormat('Y-m-d', date('Y-m-d')));
 		$this->setUpdatedAt(DateTimeImmutable::createFromFormat('Y-m-d', date('Y-m-d')));
+
 
     }
 
@@ -167,7 +174,7 @@ class Recipe
 
     /**
      * @return Collection<int, Ingredients>
-     */
+
     public function getIngredients(): Collection
     {
         return $this->ingredients;
@@ -243,6 +250,36 @@ class Recipe
             // set the owning side to null (unless already changed)
             if ($instruction->getRecipe() === $this) {
                 $instruction->setRecipe(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, RecipeIngredient>
+     */
+    public function getRecipeIngredients(): Collection
+    {
+        return $this->recipeIngredients;
+    }
+
+    public function addRecipeIngredient(RecipeIngredient $recipeIngredient): static
+    {
+        if (!$this->recipeIngredients->contains($recipeIngredient)) {
+            $this->recipeIngredients->add($recipeIngredient);
+            $recipeIngredient->setRecipe($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecipeIngredient(RecipeIngredient $recipeIngredient): static
+    {
+        if ($this->recipeIngredients->removeElement($recipeIngredient)) {
+            // set the owning side to null (unless already changed)
+            if ($recipeIngredient->getRecipe() === $this) {
+                $recipeIngredient->setRecipe(null);
             }
         }
 

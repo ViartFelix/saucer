@@ -45,9 +45,12 @@
 	<h2>Ingredients</h2>
 
 	<ul>
-		{% for ingredient in recipe.ingredients %}
+		{% for recipeIngre in recipe.recipeIngredients %}
 			<li>
-				{{ ingredient.nom }}
+				{{ recipeIngre.quantity }}
+				{{ recipeIngre.unit }}
+				de
+				{{ recipeIngre.ingredient.nom }}s
 			</li>
 		{% endfor %}
 	</ul>

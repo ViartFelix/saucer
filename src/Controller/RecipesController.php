@@ -63,6 +63,17 @@ class RecipesController extends AbstractController
 			->add('ustensils', null, [
 				'choice_label' => 'nom',
 			])
+			->add('recipeIngredients', CollectionType::class, [
+				"entry_type" => IngredientType::class,
+				'entry_options' => [
+					"required" => false,
+				],
+				'prototype' => true,
+				"allow_add" => true,
+				'by_reference' => false,
+				"mapped" => false,
+			])
+			/*
 			->add('ingredients', CollectionType::class, [
 				"entry_type" => IngredientType::class,
 				'entry_options' => [
@@ -73,6 +84,7 @@ class RecipesController extends AbstractController
 				'by_reference' => false,
 				//'choice_label' => 'nom',
 			])
+			*/
 			->add('description', TextareaType::class, [
 				"required" => false,
 			])
@@ -106,6 +118,22 @@ class RecipesController extends AbstractController
 
 			/*
 			 * <button type="button" class="add_item_link" data-collection-holder-class="ingredients">Ajouter ingredient</button>
+		<!--<a href="#" id="add-button">Ajouter instruction</a>-->
+		<div
+			id="ingredients">
+			{% for it in form.ingredients %}
+				<div>{{ form_row(it) }}</div>
+			{% endfor %}
+		</div>
+
+		<div
+			data-index="{{ form.ingredients|length > 0 ? form.ingredients|last.vars.name + 1 : 0 }}"
+			data-prototype="{{ form_widget(form.ingredients.vars.prototype)|e('html_attr') }}"
+			class="ingredients">
+		</div>
+			------------------------------------------------------------------------------------------------------
+
+			<button type="button" class="add_item_link" data-collection-holder-class="ingredients">Ajouter instruction</button>
 		<!--<a href="#" id="add-button">Ajouter instruction</a>-->
 		<div
 			id="ingredients">
@@ -171,8 +199,8 @@ class RecipesController extends AbstractController
 				$recipe->addUstensil($ustensil);
 			}
 
-			foreach($form->get('ingredients')->getData() as $ingredient) {
-				$recipe->addIngredient($ingredient);
+			foreach($form->get('recipeIngredients')->getData() as $ingredient) {
+				$recipe->addRecipeIngredient($ingredient);
 			}
 
 			$entityManager->persist($recipe);
@@ -197,7 +225,6 @@ class RecipesController extends AbstractController
 	#[Route('/recipes/{id}', name: 'app_recipes_single')]
 	public function single(Recipe $recipe): Response
 	{
-
 		$hasFavorite = $this->getUser()->getFavoriteRecipes()->contains($recipe);
 
 		//Single recette

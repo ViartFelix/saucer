@@ -18,18 +18,17 @@ class Ingredients
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
+	/*
     #[ORM\ManyToMany(targetEntity: Recipe::class, inversedBy: 'ingredients')]
     private Collection $idRecipe;
+	*/
 
-    #[ORM\Column(nullable: true)]
-    private ?int $quantiy = null;
-
-    #[ORM\Column(length: 127, nullable: true)]
-    private ?string $unit = null;
+    #[ORM\OneToOne(mappedBy: 'ingredient', cascade: ['persist', 'remove'], fetch: 'EXTRA_LAZY')]
+    private ?RecipeIngredient $recipeIngredient = null;
 
     public function __construct()
     {
-        $this->idRecipe = new ArrayCollection();
+        //$this->idRecipe = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -57,7 +56,7 @@ class Ingredients
         return $this->idRecipe;
     }
 
-	//TODO: les ingredients sont rajoutés même s'ils existent.
+	/* TODO: les ingredients sont rajoutés même s'ils existent.
     public function addIdRecipe(Recipe $idRecipe): static
     {
         if (!$this->idRecipe->contains($idRecipe)) {
@@ -94,6 +93,29 @@ class Ingredients
     public function setUnit(?string $unit): static
     {
         $this->unit = $unit;
+
+        return $this;
+    }
+	*/
+
+    public function getRecipeIngredient(): ?RecipeIngredient
+    {
+        return $this->recipeIngredient;
+    }
+
+    public function setRecipeIngredient(?RecipeIngredient $recipeIngredient): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($recipeIngredient === null && $this->recipeIngredient !== null) {
+            $this->recipeIngredient->setIngredient(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($recipeIngredient !== null && $recipeIngredient->getIngredient() !== $this) {
+            $recipeIngredient->setIngredient($this);
+        }
+
+        $this->recipeIngredient = $recipeIngredient;
 
         return $this;
     }
