@@ -10,6 +10,11 @@
 
 		{% if is_granted('ROLE_USER') or is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
 			<a href="{{ path('app_profile') }}">Mon profil</a>
+
+			{% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
+				<a href="/admin">Panel admin</a>
+			{% endif %}
+
 			<a href="/logout">Logout</a>
 		{% else %}
 			<a href="/register">

@@ -5,12 +5,8 @@
     Bonsoir :)
 </h1>
 
-	{% if is_granted('ROLE_USER') or is_granted('ROLE_NO_VERIFY') %}
+	{% if is_granted('ROLE_USER') or is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
 		User: {{ user.userIdentifier() }}
-
-
-		{% set roles = user.getroles(TRUE) %}
-		Roles: {{ dump(roles) }}
 	{% else %}
 		No user logged in.
 	{% endif %}
