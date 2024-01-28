@@ -1,0 +1,36 @@
+<div class="filters">
+	Bonsoir, ce sont les filtres
+
+	{{ form_start(form) }}
+
+		{{ form_row(form.title) }}
+		{{ form_row(form.description) }}
+
+	<div style="display: grid; grid-template-columns: 1fr 1fr;">
+		<div>
+			{{ form_row(form.cookTimeMin) }}
+			{{ form_row(form.cookTimeMax) }}
+		</div>
+		<div>
+			{{ form_row(form.prepTimeMin) }}
+			{{ form_row(form.prepTimeMax) }}
+		</div>
+	</div>
+
+	<div style="display: grid; grid-template-columns: 1fr 1fr;">
+		<div>
+			{{ form_row(form.ustensils) }}
+		</div>
+		<div>
+			{{ form_row(form.ingredients) }}
+		</div>
+	</div>
+
+
+
+	{{ form_row(form.envoyer) }}
+	<a href="{{ path('app_recipes') }}">Réinitialiser filtres</a>
+	{{ form_row(form._token) }}
+
+	{{ form_end(form, {'render_rest': false}) }}
+</div>

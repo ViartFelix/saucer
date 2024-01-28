@@ -2,9 +2,15 @@
 
 {% block body %}
 	Liste des recettes.
+	<br/>
+
 	{% if(is_granted('ROLE_USER') or is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN')) %}
 		<a href="{{ path('app_recipes_create') }}">Nouvelle recette</a>
 	{% endif %}
+
+	<hr/>
+
+	{% include "recipes/filters.twig" %}
 
 	{% if recipes|length <= 0 %}
 		<h1>Aucune recette à ce jour.</h1>
@@ -13,6 +19,9 @@
 			<h3><a href="{{ path('app_recipes_create') }}">Nouvelle recette</a></h3>
 		{% endif %}
 	{% else %}
+
+		<hr/>
+
 		<div style="display: grid; grid-template-columns: repeat(4, 20%); grid-column-gap: 20px">
 			{% for recipe in recipes %}
 				<ul>

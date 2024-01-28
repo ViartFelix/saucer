@@ -21,6 +21,86 @@ class RecipeRepository extends ServiceEntityRepository
         parent::__construct($registry, Recipe::class);
     }
 
+	public function findSearch($criteria): mixed
+	{
+		$query = $this
+			->createQueryBuilder("r")
+		;
+
+		if(!empty($criteria["title"]))
+		{
+			$query
+				->andWhere("r.title LIKE :title")
+				->setParameter('title', '%' . $criteria["title"] . '%')
+			;
+		}
+
+		if(!empty($criteria["description"]))
+		{
+			$query
+				->andWhere("r.description LIKE :description")
+				->setParameter('description', '%' . $criteria["description"] . '%')
+			;
+		}
+
+		if(!empty($criteria["cookTimeMin"]))
+		{
+			$query
+				->andWhere("r.cook_time >= :cookMin")
+				->setParameter('cookMin', $criteria["cookTimeMin"])
+			;
+		}
+
+		if(!empty($criteria["cookTimeMax"]))
+		{
+			$query
+				->andWhere("r.cook_time <= :cookMax")
+				->setParameter('cookMax', $criteria["cookTimeMax"])
+			;
+		}
+
+		if(!empty($criteria["prepTimeMin"]))
+		{
+			$query
+				->andWhere("r.prep_time >= :prepMin")
+				->setParameter('prepMin', $criteria["prepTimeMin"])
+			;
+		}
+
+		if(!empty($criteria["prepTimeMax"]))
+		{
+			$query
+				->andWhere("r.prep_time <= :prepMax")
+				->setParameter('prepMax', $criteria["prepTimeMax"])
+			;
+		}
+
+		if (!empty($criteria['ustensils']))
+		{
+			//Somehow ça marche
+			$query
+				->innerJoin('r.ustensils', 'u')
+				->andWhere('u IN (:ustensils)')
+				->setParameter('ustensils', $criteria['ustensils']);
+		}
+
+		//dd($criteria);
+
+		/*
+		//Ne marche pas.
+		if (!empty($criteria['ingredients'])) {
+			$query
+				->join('r.recipeIngredients', 'ri')
+				//->join('ri.ingredient', 'i')
+				//->andWhere(':ingredient MEMBER OF r.recipeIngredients')
+				//->setParameter('ingredient', $criteria['ingredients']);
+			;
+		}
+		*/
+
+		return $query->getQuery()->getResult();
+	}
+
 //    /**
 //     * @return Recipe[] Returns an array of Recipe objects
 //     */

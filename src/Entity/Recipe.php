@@ -23,7 +23,7 @@ class Recipe
     private ?User $idUser = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank()]
+    //#[Assert\NotBlank()]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
