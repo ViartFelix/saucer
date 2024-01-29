@@ -21,7 +21,27 @@ html, body {
 }
 
 h1, h2, h3, h4, h5, h6, p, ul, body, main {
-  	margin: 0;
+	margin: 0;
+}
+
+h1:not(.prevent) {
+	color: lighten($black, 10%);
+	font-size: 3rem;
+}
+
+h2:not(.prevent) {
+	color: lighten($black, 17.5%);
+	font-size: 2.5rem;
+}
+
+h3:not(.prevent) {
+	color: lighten($black, 22.5%);
+	font-size: 2.15rem;
+}
+
+h4:not(.prevent) {
+	color: lighten($black, 27.5%);
+	font-size: 1.85rem;
 }
 
 a {
@@ -44,5 +64,24 @@ a {
 
 	& > div {
 		position: relative;
+	}
+}
+
+.btn {
+	background-color: $third;
+	color: $white !important;
+	text-align: center;
+	display: block;
+
+	&.btn-normal {
+		border-radius: 2px;
+		padding: 3px 6px;
+		font-size: 1rem;
+	}
+
+	&.btn-large {
+		border-radius: 5px;
+		padding: 5px 10px;
+		font-size: 1.5rem;
 	}
 }
