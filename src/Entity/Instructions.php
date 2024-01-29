@@ -7,6 +7,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use JetBrains\PhpStorm\NoReturn;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 #[ORM\Entity(repositoryClass: InstructionsRepository::class)]
 class Instructions
@@ -25,10 +28,44 @@ class Instructions
     #[ORM\ManyToOne(cascade: ["persist"], inversedBy: 'instructions')]
     private ?Recipe $recipe = null;
 
+	#[NoReturn]
+	public function __construct()
+	{
+	}
+
+	public function __toString()
+	{
+		return $this->content;
+	}
+
     public function getId(): ?int
     {
         return $this->id;
     }
+
+	private ?UploadedFile $mediaFile = null;
+
+	public function setMediaFile(UploadedFile $file = null): void
+	{
+		$this->mediaFile = $file;
+
+
+		/*
+		if(isset($file))
+		{
+			$this->setMedia($file);
+		}
+		else {
+			$this->setMedia(null);
+		}
+		*/
+
+	}
+
+	public function getMediaFile(): ?UploadedFile
+	{
+		return $this->mediaFile;
+	}
 
     /**
      * @return Collection<int, Recipe>

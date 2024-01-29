@@ -7,6 +7,9 @@ parameters:
     photo_recipes: '%kernel.project_dir%/public/uploads/recipes'
 
 services:
+    App\Service\FileHandler:
+        arguments:
+            # $targetDirectory: '%kernel.project_dir%/public/uploads/recipes'
     App\Form\Type\UserRolesType:
         tags: [ 'form.type' ]
     # default configuration for services in *this* file

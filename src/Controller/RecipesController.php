@@ -10,6 +10,7 @@ use App\Form\RecipesFiltersType;
 use App\Form\UstensilType;
 
 use App\Repository\UserRepository;
+use App\Service\FileHandler;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -54,7 +55,6 @@ class RecipesController extends AbstractController
 
 	//Créer une recette
 	#[Route('/recipes/new', name: 'app_recipes_create')]
-	#[IsGranted('ROLE_USER')]
 	public function create(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
 	{
 		$recipe = new Recipe();
@@ -146,19 +146,10 @@ class RecipesController extends AbstractController
 
 				if(isset($file))
 				{
-					$ogFileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-					$safeFilename = $slugger->slug($ogFileName);
-					$newFilename = $safeFilename.'-'.uniqid().'.'.$file->guessExtension();
-
-					$instruction->setMedia($newFilename);
-
-					$file->move(
-						$this->getParameter("photo_recipes"),
-						$newFilename,
-					);
+					$uploader = new FileHandler($slugger);
+					$name = $uploader->handleFile($file);
+					$instruction->setMedia($name);
 				}
-
-
 			}
 
 			// Ajouter les ustensiles à la recette à partir des données du formulaire
@@ -167,7 +158,7 @@ class RecipesController extends AbstractController
 			}
 
 			foreach($form->get('recipeIngredients')->getData() as $ingredient) {
-				$recipe->addRecipeIngredient($ingredient);
+				if(isset($ingredient)) $recipe->addRecipeIngredient($ingredient);
 			}
 
 			$entityManager->persist($recipe);

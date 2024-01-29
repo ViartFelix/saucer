@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Controller\RecipesController;
 use App\Entity\Ingredients;
 use App\Entity\Recipe;
 use App\Entity\User;
@@ -22,14 +23,12 @@ class AdminDashboardController extends AbstractDashboardController
 	public function index(): Response
 	{
 
-		return parent::index();
-		/*
+		//return parent::index();
 		$url = $this->adminUrlGenerator
-			->setController(IngredientsCrudController::class)
+			->setController(UserCrudController::class)
 			->generateUrl();
 
 		return $this->redirect($url);
-		*/
 	}
 
     #[Route('/admin/ingredients', name: 'app_admin_ingredients')]
@@ -42,7 +41,25 @@ class AdminDashboardController extends AbstractDashboardController
 		return $this->redirect($url);
     }
 
+	#[Route('/admin/recipes', name: 'app_admin_recipes')]
+	public function admin_recipes(): Response
+	{
+		$url = $this->adminUrlGenerator
+			->setController(RecipeCrudController::class)
+			->generateUrl();
 
+		return $this->redirect($url);
+	}
+
+	#[Route('/admin/recipes', name: 'app_admin_ustensils')]
+	public function admin_ustensils(): Response
+	{
+		$url = $this->adminUrlGenerator
+			->setController(UstensilCrudController::class)
+			->generateUrl();
+
+		return $this->redirect($url);
+	}
 
     public function configureDashboard(): Dashboard
     {

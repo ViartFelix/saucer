@@ -4,17 +4,15 @@ namespace App\Controller\Admin;
 
 use App\Entity\User;
 use App\Entity\Ustensil;
-use App\Form\Type\UserRolesType;
+
 use Doctrine\ORM\EntityManagerInterface;
-use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
+
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
-use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
 class UserCrudController extends AbstractCrudController
 {
@@ -23,7 +21,7 @@ class UserCrudController extends AbstractCrudController
         return User::class;
     }
 
-	private function getRoles()
+	private function getRoles(): array
 	{
 		$choises =  $this->getParameter('security.role_hierarchy.roles');
 		$final = [];
@@ -38,16 +36,17 @@ class UserCrudController extends AbstractCrudController
 
 	public function configureFields(string $pageName): iterable
 	{
-		return [
-			IdField::new('id')->hideOnForm(),
-			TextField::new('email'),
-			TextField::new('nom'),
-			TextField::new('prenom'),
-			ChoiceField::new('roles')
-				->setChoices($this->getRoles())
-				->allowMultipleChoices(),
-			TextField::new('password'),
-		];
+		yield IdField::new('id')->hideOnForm();
+		yield TextField::new('email');
+		yield TextField::new('nom');
+		yield TextField::new('prenom');
+
+		yield ChoiceField::new('roles')
+			->setChoices($this->getRoles())
+			->allowMultipleChoices();
+
+		yield TextField::new('password')
+			->setFormType(PasswordType::class);
 	}
 
 	public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
