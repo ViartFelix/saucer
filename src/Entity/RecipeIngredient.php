@@ -25,6 +25,11 @@ class RecipeIngredient
     #[ORM\OneToOne(inversedBy: 'recipeIngredient', cascade: ['persist', 'remove'], fetch: "EXTRA_LAZY")]
     private ?Ingredients $ingredient = null;
 
+	public function __toString()
+	{
+		return $this->ingredient->getNom(); // Assuming Ingredient entity has a 'name' property
+	}
+
     public function getId(): ?int
     {
         return $this->id;

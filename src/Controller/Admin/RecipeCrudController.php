@@ -8,6 +8,7 @@ use App\Entity\Recipe;
 use App\Entity\Ustensil;
 use App\Form\IngredientType;
 use App\Form\InstructionType;
+use App\Form\Type\IngredientsFormType;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
@@ -56,9 +57,8 @@ class RecipeCrudController extends AbstractCrudController
 		;
 
 		yield AssociationField::new('recipeIngredients')
-			->setFormTypeOption('choice_label', 'ingredient.nom')
-			->setFormTypeOption('by_reference', false)
-			//->setCrudController(IngredientsCrudController::class)
+			->setFormTypeOption('choice_label', 'ingredient')
+			//->setCrudController(RecipeIngredientCrudController::class)
 		;
 
 		yield CollectionField::new('instructions')
@@ -76,10 +76,10 @@ class RecipeCrudController extends AbstractCrudController
 
 	public function updateEntity(EntityManagerInterface $entityManager, $entityInstance):void
 	{
-		$this->persistUpdate($entityManager, $entityInstance);
+		$this->persistUpdate($entityManager, $entityInstance, true);
 	}
 
-	private function persistUpdate(EntityManagerInterface $entityManager, $entityInstance): void
+	private function persistUpdate(EntityManagerInterface $entityManager, $entityInstance, $isUpdate = false): void
 	{
 		if($entityInstance instanceof Recipe) {
 			foreach ($entityInstance->getInstructions() as $instruction) {
@@ -90,7 +90,17 @@ class RecipeCrudController extends AbstractCrudController
 			}
 		}
 
-		$entityInstance->setUpdatedAt(DateTimeImmutable::createFromFormat('Y-m-d', date('Y-m-d')));
-		parent::persistEntity($entityManager, $entityInstance);
+		$now = DateTimeImmutable::createFromFormat('Y-m-d', date('Y-m-d'));
+
+		$entityInstance->setUpdatedAt($now);
+
+		if($isUpdate)
+		{
+			parent::updateEntity($entityManager, $entityInstance);
+		}
+		else {
+			$entityInstance->setCreatedAt($now);
+			parent::persistEntity($entityManager, $entityInstance);
+		}
 	}
 }

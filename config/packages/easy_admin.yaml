@@ -1,0 +1,25 @@
+# config/packages/easy_admin.yaml
+easy_admin:
+    entities:
+        Recipe:
+            class: App\Entity\Recipe
+            form:
+                fields:
+                    - { property: 'title' }
+                    - { property: 'description', type: 'textarea' }
+                    - { property: 'prep_time' }
+                    - { property: 'cook_time' }
+                    - { property: 'thumbnail' }
+                    - { property: 'recipeIngredients', type: 'collection' }
+        RecipeIngredient:
+            class: App\Entity\RecipeIngredient
+            form:
+                fields:
+                    - { property: 'ingredient' }
+                    - { property: 'quantity' }
+                    - { property: 'unit' }
+        Ingredient:
+            class: App\Entity\Ingredient
+            form:
+                fields:
+                    - { property: 'nom' }  # Adjust this according to your Ingredient entity property name

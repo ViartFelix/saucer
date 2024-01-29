@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Form;
+namespace App\Form\Type;
 
 use App\Entity\Ingredients;
-use App\Entity\Recipe;
 use App\Entity\RecipeIngredient;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -12,26 +11,21 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class IngredientType extends AbstractType
+class IngredientsFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-		$builder
-			->add('quantity')
-			->add('unit')
-			->add('ingredient', EntityType::class, [
-				'class' => Ingredients::class,
-				'choice_label' => 'nom', // Assuming 'nom' is the property of Ingredients entity you want to display
-				'label' => 'Ingredient',
-				'required' => true,
-				'placeholder' => 'Choose an ingredient',
-			]);
+        $builder
+			->add('ingredient')
+			->add('quantity', NumberType::class)
+			->add('unit', TextType::class)
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => RecipeIngredient::class,
+			'data_class' => RecipeIngredient::class,
         ]);
     }
 }
