@@ -21,21 +21,43 @@
 	<meta property="og:determiner" content="auto" />
 {% endblock %}
 
+{% block stylesheets %}
+	<link rel="stylesheet" href="{{ asset('build/recipe_single_css.css') }}">
+{% endblock %}
+
 {% block body %}
+	<main class="container">
+		{% if recipe.thumbnail %}
+			<section id="thumbnail">
+				<img class="main-thumbnail" src="{{ asset('uploads/recipes/' ~ recipe.thumbnail) }}" alt="thumbnail"/>
+			</section>
 
-	{% if recipe.thumbnail %}
-		<img src="{{ asset('uploads/recipes/' ~ recipe.thumbnail) }}"/>
-	{% else %}
-		<h3>No thumbnail ?</h3>
-	{% endif %}
+			<hr>
+		{% endif %}
 
-	<h1>{{ recipe.title }}</h1>
-	<p><i>{{ recipe.description }}</i></p>
+		<section id="g-infos">
+			<h1>{{ recipe.title }}</h1>
+			<p><i>{{ recipe.description }}</i></p>
 
-	<hr>
+			<p>Préparation: {{ recipe.prepTime }} mins</p>
+			<p>Cuisson: {{ recipe.cookTime }} mins</p>
+		</section>
 
-	<p>Préparation: {{ recipe.prepTime }} mins</p>
-	<p>Cuisson: {{ recipe.cookTime }} mins</p>
+		<hr>
+
+		<section id="needs">
+
+		</section>
+
+		<hr>
+
+		<section id="instructions">
+
+		</section>
+	</main>
+
+
+
 
 	<hr>
 

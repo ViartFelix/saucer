@@ -5,16 +5,23 @@
 {% endblock %}
 
 {% block body %}
+
+	{% set can_create_recipes = is_granted('ROLE_USER') or is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
+
 	<main class="container">
 		<div class="title-container">
 			<h1>Liste des recettes.</h1>
 
-			<a class="btn btn-large" href="{{ path('app_recipes_create') }}">Nouvelle recette</a>
+			{% if(can_create_recipes) %}
+				<a class="btn btn-large" href="{{ path('app_recipes_create') }}">Nouvelle recette</a>
+			{% endif %}
 		</div>
 
 
 		<section id="filters">
 			<h2>Filtres</h2>
+
+			{% include "recipes/filters.twig" %}
 		</section>
 
 		<hr/>
@@ -26,7 +33,7 @@
 				{% if recipes|length <= 0 %}
 					<h4>Aucune recette à ce jour.</h4>
 
-					{% if(is_granted('ROLE_USER') or is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN')) %}
+					{% if(can_create_recipes) %}
 						<h3><a href="{{ path('app_recipes_create') }}">Nouvelle recette</a></h3>
 					{% endif %}
 				{% else %}
@@ -58,32 +65,15 @@
 
 								<a class="btn btn-normal" href="{{ path('app_recipes_single', {'id': recipe.id}) }}">Voir la recette</a>
 							</div>
-
-							<!--
-							<li><b>{{ recipe.title }}</b></li>
-							<li><i>{{ recipe.description }}</i></li>
-							<li>{{ recipe.prepTime }}</li>
-							<li>{{ recipe.cookTime }}</li>
-							<li><a href="{{ path('app_recipes_single', {'id': recipe.id}) }}">Voir</a></li>
-							-->
 						</article>
 					{% endfor %}
 				</div>
 				{% endif %}
 			</div>
 		</section>
-
 	</main>
 
-	<br/>
 
-	{% if(is_granted('ROLE_USER') or is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN')) %}
-		<a href="{{ path('app_recipes_create') }}">Nouvelle recette</a>
-	{% endif %}
-
-	<hr/>
-
-	{% include "recipes/filters.twig" %}
 
 
 {% endblock %}

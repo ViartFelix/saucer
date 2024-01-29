@@ -15,6 +15,7 @@ let scssEntry = {
     header: "header/header.scss",
 	home: "home/index.scss",
 	recipes_index: "recipes/index/index.scss",
+	recipe_single_css: "recipes/single/single.scss",
     common: "common/common.scss"
 }
 
