@@ -8,8 +8,10 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactory;
 
 
 use DateTimeImmutable;
@@ -121,9 +123,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->password;
     }
 
-    public function setPassword(string $password): static
+    public function setPassword(string $password, bool $isHashed = false): static
     {
-        $this->password = $password;
+
+		$finalPWD = $password;
+
+		//Si le mot de passe n'est pas encore hashé (pour le panel Admin)
+		if(!$isHashed)
+		{
+			$factory = new PasswordHasherFactory(['common' => ['algorithm' => "auto"]]);
+			$hasher = $factory->getPasswordHasher('common');
+			$finalPWD = $hasher->hash($password);
+		}
+
+        $this->password = $finalPWD;
 
         return $this;
     }

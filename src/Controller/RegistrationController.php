@@ -40,7 +40,8 @@ class RegistrationController extends AbstractController
                 $userPasswordHasher->hashPassword(
                     $user,
                     $form->get('plainPassword')->getData()
-                )
+                ),
+				true,
             );
 
 			$user->setIsVerified(false);
