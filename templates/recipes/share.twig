@@ -1,0 +1,29 @@
+{# templaytes/recipes/share.twig #}
+
+{%
+set socials = [
+	'fb|Facebook|logos:facebook',
+	'tw|Twitter|logos:twitter',
+	'copy|Copy link|ph:copy-bold',
+	'share|Share|material-symbols:share',
+	're|Reddit|logos:reddit-icon',
+	'pi|Pinterest|logos:pinterest',
+	'wa|WhatsApp|logos:whatsapp-icon',
+	'mail|E-mail|ic:outline-email',
+	'print|Print it|material-symbols:print-outline',
+]
+%}
+
+<div class="share-btns">
+	{% for __social in socials %}
+		{% set social = __social|split('|') %}
+
+		<a
+			title="{{ social[1] }}"
+			class="btn-social {{ 'btn-' ~ social[0] }}"
+			data-id="{{ social[0] }}"
+		>
+			<iconify-icon icon="{{ social[2] }}"></iconify-icon>
+		</a>
+	{% endfor %}
+</div>
