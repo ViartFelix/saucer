@@ -1,5 +1,26 @@
 {% extends "base.twig" %}
 
+{% block opg %}
+	{{ parent() }}
+
+	{% if recipe.title %}
+		<meta property="og:title" content="{{ recipe.title }}" />
+	{% endif %}
+
+
+	{% if recipe.thumbnail %}
+		<meta property="og:image" content='{{ app.request.getSchemeAndHttpHost() ~ "/uploads/recipes/" ~ recipe.thumbnail}}' />
+	{% endif %}
+
+	<meta property="og:type" content="article" />
+
+	{% if recipe.description %}
+		<meta property="og:description" content="{{ recipe.description }}" />
+	{% endif %}
+
+	<meta property="og:determiner" content="auto" />
+{% endblock %}
+
 {% block body %}
 
 	{% if recipe.thumbnail %}
@@ -26,7 +47,6 @@
 	{% endif %}
 
 	<br/>
-
 		<a href="{{ path('app_recipes_favorite', {'id': recipe.id}) }}">Favori</a>
 	<hr>
 
