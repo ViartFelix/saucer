@@ -67,8 +67,6 @@ class Recipe
 
 		$this->setCreatedAt(DateTimeImmutable::createFromFormat('Y-m-d', date('Y-m-d')));
 		$this->setUpdatedAt(DateTimeImmutable::createFromFormat('Y-m-d', date('Y-m-d')));
-
-
     }
 
     public function getId(): ?int

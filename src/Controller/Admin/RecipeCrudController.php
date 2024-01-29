@@ -8,6 +8,7 @@ use App\Entity\Recipe;
 use App\Entity\Ustensil;
 use App\Form\IngredientType;
 use App\Form\InstructionType;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
@@ -55,9 +56,9 @@ class RecipeCrudController extends AbstractCrudController
 		;
 
 		yield AssociationField::new('recipeIngredients')
-			->setFormTypeOption('choice_label', 'ingredient')
+			->setFormTypeOption('choice_label', 'ingredient.nom')
 			->setFormTypeOption('by_reference', false)
-			->setCrudController(IngredientsCrudController::class)
+			//->setCrudController(IngredientsCrudController::class)
 		;
 
 		yield CollectionField::new('instructions')
@@ -65,48 +66,21 @@ class RecipeCrudController extends AbstractCrudController
 			->setFormTypeOptions([
 				'by_reference' => false,
 			])
-			//->setFormTypeOption('choice_label', 'content')
-			//->setFormTypeOption('by_reference', false)
-			//->setCrudController(IngredientsCrudController::class)
 		;
 	}
 
 	public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
 	{
-		/*
-		if($entityInstance instanceof Instructions && $entityInstance->getMedia())
-		{
-			$file = $entityInstance->getMedia();
-			$finalName = $this->fileHandler->handleFile($file);
-			$entityInstance->setMedia($finalName);
-		}
-
-
-		if (!$entityInstance instanceof Recipe) return;
-		*/
-
-		if($entityInstance instanceof Recipe) {
-			foreach ($entityInstance->getInstructions() as $instruction) {
-				$name = $this->fileHandler->handleFile($instruction);
-				$instruction->setMedia($name);
-			}
-		}
-		parent::persistEntity($entityManager, $entityInstance);
+		$this->persistUpdate($entityManager, $entityInstance);
 	}
 
 	public function updateEntity(EntityManagerInterface $entityManager, $entityInstance):void
 	{
-		/*
-		if($entityInstance instanceof Instructions && $entityInstance->getMedia())
-		{
-			$file = $entityInstance->getMedia();
-			$finalName = $this->fileHandler->handleFile($file);
-			$entityInstance->setMedia($finalName);
-		}
+		$this->persistUpdate($entityManager, $entityInstance);
+	}
 
-		if (!$entityInstance instanceof Recipe) return;
-		*/
-
+	private function persistUpdate(EntityManagerInterface $entityManager, $entityInstance): void
+	{
 		if($entityInstance instanceof Recipe) {
 			foreach ($entityInstance->getInstructions() as $instruction) {
 				$name = $this->fileHandler->handleFile($instruction->getMediaFile());
@@ -116,17 +90,7 @@ class RecipeCrudController extends AbstractCrudController
 			}
 		}
 
+		$entityInstance->setUpdatedAt(DateTimeImmutable::createFromFormat('Y-m-d', date('Y-m-d')));
 		parent::persistEntity($entityManager, $entityInstance);
 	}
-
-    /*
-    public function configureFields(string $pageName): iterable
-    {
-        return [
-            IdField::new('id'),
-            TextField::new('title'),
-            TextEditorField::new('description'),
-        ];
-    }
-    */
 }
