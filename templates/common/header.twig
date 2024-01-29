@@ -1,29 +1,63 @@
 {# templates/common/header.twig #}
 
-<header>
+<header id="main-header">
     <div class="header-container">
-		<a href="/">
-			<img class="main-icon" src="{{ asset('assets/img/icon.png') }}"  alt="Saucer."/>
-		</a>
-
-		<a href="{{ path('app_recipes') }}">Recettes</a>
-
-		{% if is_granted('ROLE_USER') or is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
-			<a href="{{ path('app_profile') }}">Mon profil</a>
-
-			{% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
-				<a href="/admin">Panel admin</a>
-			{% endif %}
-
-			<a href="/logout">Logout</a>
-		{% else %}
-			<a href="/register">
-				Register
+		<nav class="header-wrapper">
+			<a class="header-icon" href="/">
+				<img class="main-icon" src="{{ asset('assets/img/icon.png') }}"  alt="Saucer."/>
+				<p class="main-title">Saucer</p>
 			</a>
 
-			<a href="/login">
-				Login
-			</a>
-		{% endif %}
+			<div class="header-contents">
+				<a id="recipes" class="header-link-icon" href="{{ path('app_recipes') }}">
+					<span class="link-text">Recipes</span>
+					<p class="link-icon">
+						<span class="iconify" data-icon="mdi:cook"></span>
+					</p>
+				</a>
+
+				{% if is_granted('ROLE_USER') or is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
+					<a class="header-link-icon" href="{{ path('app_profile') }}">
+						<span class="link-text">Profil</span>
+						<p class="link-icon">
+							<span class="iconify" data-icon="mdi:user"></span>
+						</p>
+					</a>
+
+					{% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
+						<a class="header-link-icon" href="{{ path('app_admin') }}">
+							<span class="link-text">Panel admin</span>
+							<p class="link-icon">
+								<span class="iconify" data-icon="eos-icons:admin"></span>
+							</p>
+						</a>
+					{% endif %}
+
+					<a id="logout" class="header-link-icon" href="/logout">
+						<span class="link-text">Logout</span>
+
+						<p class="link-icon">
+							<span class="iconify" data-icon="material-symbols:logout-sharp"></span>
+						</p>
+					</a>
+				{% else %}
+					<a class="header-link-icon" href="{{ path('app_register') }}">
+						<span class="link-text">Register</span>
+
+						<p class="link-icon">
+							<span class="iconify" data-icon="mdi:register"></span>
+						</p>
+					</a>
+
+					<a class="header-link-icon" href="{{ path('app_login') }}">
+						<span class="link-text">Login</span>
+
+						<p class="link-icon">
+							<span class="iconify" data-icon="material-symbols:login"></span>
+						</p>
+					</a>
+				{% endif %}
+			</div>
+		</nav>
     </div>
 </header>

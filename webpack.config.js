@@ -13,6 +13,7 @@ let jsEntry = {
 
 let scssEntry = {
     header: "header/header.scss",
+	home: "home/index.scss",
     common: "common/common.scss"
 }
 

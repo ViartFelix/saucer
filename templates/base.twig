@@ -4,7 +4,6 @@
         <meta charset="UTF-8">
         <title>{% block title %}Welcome!{% endblock %}</title>
 
-
 		{% block opg %}
 			<meta property="og:url" content="{{ app.request.uri }}" />
 			<meta property="og:locale" content="fr_FR" />
@@ -24,7 +23,6 @@
 
         {% block stylesheets %}
         {% endblock %}
-
     </head>
     <body>
         {% include 'common/header.twig' %}

@@ -1,0 +1,49 @@
+@import '../common/vars';
+
+main.container {
+	section.main-content {
+		display: grid;
+		grid-template-columns: 40% 1fr;
+		column-gap: 3rem;
+
+		.main-site-title {
+			grid-column: 1/2;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			padding-left: 50px;
+
+			h1 {
+				font-size: 4rem;
+				font-weight: 800;
+				font-family: 'Montserrat', sans-serif;
+			}
+
+			p {
+				margin: 25px 0;
+				font-size: 2rem;
+				color: darken($sec, 00%);
+			}
+
+			a.btn {
+				background-color: $third;
+				border-radius: 5px;
+				padding: 5px 10px;
+				text-align: center;
+				font-size: 1.5rem;
+				color: $white;
+			}
+		}
+
+		.main-icon {
+			grid-column: 2/3;
+
+			img {
+				width: 100%;
+				height: auto;
+				object-fit: contain;
+				object-position: center;
+			}
+		}
+	}
+}

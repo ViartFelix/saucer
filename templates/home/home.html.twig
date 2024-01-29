@@ -1,14 +1,27 @@
 {% extends "base.twig" %}
 
-{% block body %}
-<h1>
-    Bonsoir :)
-</h1>
-
-	{% if is_granted('ROLE_USER') or is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
-		User: {{ user.userIdentifier() }}
-	{% else %}
-		No user logged in.
-	{% endif %}
-
+{% block stylesheets %}
+	<link rel="stylesheet" href="{{ asset('build/home.css') }}"/>
 {% endblock %}
+
+{% block body %}
+	<main class="container">
+		<section class="main-content">
+			<div class="main-site-title">
+				<h1>
+					Saucer.
+				</h1>
+
+				<p class="sub-main-title">Where good food meets simplicity</p>
+
+				<a class="btn btn-title" href="{{ path('app_recipes') }}">Recipes</a>
+			</div>
+
+
+			<div class="main-icon">
+				<img src="{{ asset('assets/img/icon.png') }}">
+			</div>
+		</section>
+	</main>
+{% endblock %}
+

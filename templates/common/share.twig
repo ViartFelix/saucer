@@ -1,4 +1,4 @@
-{# templaytes/recipes/share.twig #}
+{# templates/common/share.twig #}
 
 {%
 set socials = [
@@ -23,7 +23,7 @@ set socials = [
 			class="btn-social {{ 'btn-' ~ social[0] }}"
 			data-id="{{ social[0] }}"
 		>
-			<iconify-icon icon="{{ social[2] }}"></iconify-icon>
+			<span class="iconify" data-icon="{{ social[2] }}"></span>
 		</a>
 	{% endfor %}
 </div>

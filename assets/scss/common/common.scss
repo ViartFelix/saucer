@@ -9,14 +9,19 @@ html {
 	font-size: 1rem;
 	font-family: 'Roboto', serif;
 	font-weight: 400;
+	background-color: $main;
 }
 
 html, body, main {
-  position: relative;
+  	position: relative;
+}
+
+html, body {
+	min-height: 100vh;
 }
 
 h1, h2, h3, h4, h5, h6, p, ul, body, main {
-  margin: 0;
+  	margin: 0;
 }
 
 a {
@@ -25,4 +30,19 @@ a {
 
 .hidden {
 	display: none;
+}
+
+.container {
+	max-width: $container;
+	width: $container !important;
+	position: relative;
+	background-color: $white;
+	padding: 2rem;
+	border-radius: 1.2rem;
+	opacity: 0;
+	margin: 0 auto 3rem;
+
+	& > div {
+		position: relative;
+	}
 }
