@@ -48,18 +48,6 @@ class Instructions
 	public function setMediaFile(UploadedFile $file = null): void
 	{
 		$this->mediaFile = $file;
-
-
-		/*
-		if(isset($file))
-		{
-			$this->setMedia($file);
-		}
-		else {
-			$this->setMedia(null);
-		}
-		*/
-
 	}
 
 	public function getMediaFile(): ?UploadedFile
@@ -75,7 +63,7 @@ class Instructions
         return $this->recipe;
     }
 
-	public function setRecipe(Recipe $recipe): static
+	public function setRecipe(?Recipe $recipe): static
 	{
 		$this->recipe = $recipe;
 

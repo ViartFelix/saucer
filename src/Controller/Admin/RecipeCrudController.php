@@ -123,16 +123,4 @@ class RecipeCrudController extends AbstractCrudController
 	{
 		parent::deleteEntity($entityManager, $entityInstance);
 	}
-
-	private function persistUpdate(EntityManagerInterface $entityManager, $entityInstance, $isUpdate = false): void
-	{
-		if($entityInstance instanceof Recipe) {
-			foreach ($entityInstance->getInstructions() as $instruction) {
-				$name = $this->fileHandler->handleFile($instruction->getMediaFile());
-
-				if(!empty($name)) $instruction->setMedia($name);
-				else $instruction->setMedia(null);
-			}
-		}
-	}
 }
