@@ -1,4 +1,4 @@
-{% extends "base.twig" %}
+{% extends "base.twig"%}
 
 {% block stylesheets %}
 	<link rel="stylesheet" href="{{ asset('build/recipes_index.css') }}">
@@ -8,7 +8,7 @@
 
 	{% set can_create_recipes = is_granted('ROLE_USER') or is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
 
-	<main class="container">
+	<main class="container container-full container-translate">
 		<div class="title-container">
 			<h1>Liste des recettes.</h1>
 
@@ -17,63 +17,39 @@
 			{% endif %}
 		</div>
 
-
 		<section id="filters">
-			<h2>Filtres</h2>
+			<div data-filter-trigger class="filters-title chip big-chip undeployed">
+				<h2 class="prevent">Filtres</h2>
+				<span class="iconify" data-icon="mdi:filter"></span>
+			</div>
 
-			{% include "recipes/filters.twig" %}
+			<div data-filters class="hidden">
+				{% include "recipes/filters.twig" %}
+			</div>
+
 		</section>
-
-		<hr/>
 
 		<section id="results">
 			<h2>Résultats</h2>
 
 			<div class="grid-container">
-				{% if recipes|length <= 0 %}
-					<h4>Aucune recette à ce jour.</h4>
+				{% if recipes|length == 0 %}
+					<h4>Aucune recette.</h4>
 
 					{% if(can_create_recipes) %}
-						<h3><a href="{{ path('app_recipes_create') }}">Nouvelle recette</a></h3>
+						<a class="btn btn-large" href="{{ path('app_recipes_create') }}">Nouvelle recette</a>
 					{% endif %}
 				{% else %}
 
 				<div class="grid-results">
-					{% for recipe in recipes %}
-						<article>
-							{% if recipe.thumbnail is not null %}
-								<img class="recipe-img" src="{{ asset('uploads/recipes/' ~ recipe.thumbnail) }}" alt="recipe image">
-							{% endif %}
-
-							<div class="article-container">
-								<p><b>{{ recipe.title }}</b></p>
-								<p><i>{{ recipe.description }}</i></p>
-
-								<hr/>
-
-								<div class="cook-prep-container">
-									<div title="Preparation time" class="prep-time">
-										<span  class="iconify" data-icon="mingcute:time-fill"></span>
-										<p class="target-prep-time">{{ recipe.prepTime ?? 0 }} minute(s)</p>
-									</div>
-
-									<div title="Cooking time" class="cook-time">
-										<span class="iconify" data-icon="mdi:timer-sand"></span>
-										<p class="target-prep-time">{{ recipe.cookTime ?? 0 }} minute(s)</p>
-									</div>
-								</div>
-
-								<a class="btn btn-normal" href="{{ path('app_recipes_single', {'id': recipe.id}) }}">Voir la recette</a>
-							</div>
-						</article>
-					{% endfor %}
+					{% include "recipes/list.twig" %}
 				</div>
 				{% endif %}
 			</div>
 		</section>
 	</main>
+{% endblock %}
 
-
-
-
+{% block javascripts %}
+	<script src="{{ asset('build/recipe_index_js.js') }}"></script>
 {% endblock %}

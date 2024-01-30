@@ -1,72 +1,11 @@
 @import "../../common/vars";
+@import "list";
+@import "filters";
 
 main.container {
-
 	.title-container {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-	}
-
-	section#results {
-		div.grid-container {
-			div.grid-results {
-				display: grid;
-				grid-template-columns: repeat(3, minmax(100px, 1fr));
-				grid-template-rows: auto;
-				gap: 30px;
-
-				article {
-					width: 100%;
-					height: 100%;
-					border: 1px solid $black;
-					//background-color: $black;
-					border-radius: 5px;
-					overflow: hidden;
-					transition: all 0.3s ease-in-out;
-					cursor: pointer;
-
-					& * {
-						color: $black;
-					}
-
-					&:hover {
-						transform: scale(1.05);
-					}
-
-					img.recipe-img {
-						max-height: 150px;
-						width: 100%;
-						object-fit: cover;
-						object-position: center;
-					}
-
-					div.article-container {
-						height: auto;
-						padding: 5px;
-
-						div.cook-prep-container {
-							margin-bottom: 15px;
-							display: grid;
-							grid-template-columns: repeat(2, 1fr);
-							column-gap: 5px;
-
-							& > div {
-								svg {
-									width: 100%;
-									height: 25px;
-									object-fit: contain;
-									object-position: center;
-								}
-
-								p {
-									text-align: center;
-								}
-							}
-						}
-					}
-				}
-			}
-		}
 	}
 }

@@ -6,16 +6,16 @@ $(()=>{
 	let headerHeight = $("header#main-header").height()
 	let screenHeight = screen.height;
 
-	gsap.to(".container", {
-		y: screenHeight.toString(),
+	gsap.to(".container-translate", {
+		y: (screenHeight.toString()) * 0.5,
 		duration: 0,
 		opacity: 0,
 	})
 
-	gsap.to(".container", {
+	gsap.to(".container-translate", {
 		y: 0.75 * headerHeight,
 		duration: 1.25,
 		opacity: 1,
-		ease: "power3.inOut"
+		ease: "power3.out"
 	})
 })

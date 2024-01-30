@@ -26,7 +26,7 @@
 {% endblock %}
 
 {% block body %}
-	<main class="container">
+	<main class="container-translate">
 		{% if recipe.thumbnail %}
 			<section id="thumbnail">
 				<img class="main-thumbnail" src="{{ asset('uploads/recipes/' ~ recipe.thumbnail) }}" alt="thumbnail"/>
@@ -35,25 +35,28 @@
 			<hr>
 		{% endif %}
 
-		<section id="g-infos">
-			<h1>{{ recipe.title }}</h1>
-			<p><i>{{ recipe.description }}</i></p>
+		<div class="container">
+			<section id="g-infos">
+				<h1>{{ recipe.title }}</h1>
+				<p><i>{{ recipe.description }}</i></p>
 
-			<p>Préparation: {{ recipe.prepTime }} mins</p>
-			<p>Cuisson: {{ recipe.cookTime }} mins</p>
-		</section>
+				<p>Préparation: {{ recipe.prepTime }} mins</p>
+				<p>Cuisson: {{ recipe.cookTime }} mins</p>
+			</section>
 
-		<hr>
+			<hr>
 
-		<section id="needs">
+			<section id="needs">
 
-		</section>
+			</section>
 
-		<hr>
+			<hr>
 
-		<section id="instructions">
+			<section id="instructions">
 
-		</section>
+			</section>
+		</div>
+
 	</main>
 
 

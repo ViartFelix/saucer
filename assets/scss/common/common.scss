@@ -24,24 +24,52 @@ h1, h2, h3, h4, h5, h6, p, ul, body, main {
 	margin: 0;
 }
 
-h1:not(.prevent) {
-	color: lighten($black, 10%);
+h1 {
+	&:not(.prevent) {
+		color: lighten($black, 10%);
+	}
+
 	font-size: 3rem;
 }
 
-h2:not(.prevent) {
-	color: lighten($black, 17.5%);
+h2 {
+	&:not(.prevent) {
+		color: lighten($black, 17.5%);
+	}
+
 	font-size: 2.5rem;
 }
 
-h3:not(.prevent) {
-	color: lighten($black, 22.5%);
+h3 {
+	&:not(.prevent) {
+		color: lighten($black, 22.5%);
+	}
+
 	font-size: 2.15rem;
 }
 
-h4:not(.prevent) {
-	color: lighten($black, 27.5%);
+h4 {
+	&:not(.prevent) {
+		color: lighten($black, 27.5%);
+	}
+
 	font-size: 1.85rem;
+}
+
+h5 {
+	&:not(.prevent) {
+		color: lighten($black, 32.5%);
+	}
+
+	font-size: 1.70rem;
+}
+
+h6 {
+	&:not(.prevent) {
+		color: lighten($black, 37.5%);
+	}
+
+	font-size: 1.62rem;
 }
 
 a {
@@ -56,14 +84,22 @@ a {
 	max-width: $container;
 	width: $container !important;
 	position: relative;
-	background-color: $white;
-	padding: 2rem;
-	border-radius: 1.2rem;
 	opacity: 0;
-	margin: 0 auto 3rem;
+	margin: 0 auto;
 
 	& > div {
 		position: relative;
+	}
+
+	&:not(&-translate)
+	{
+		opacity: 1;
+	}
+
+	&-full {
+		background-color: $white;
+		padding: 2rem;
+		border-radius: 1.2rem;
 	}
 }
 
@@ -83,5 +119,29 @@ a {
 		border-radius: 5px;
 		padding: 5px 10px;
 		font-size: 1.5rem;
+	}
+}
+
+.hidden {
+	display: none;
+}
+
+.chip {
+	width: fit-content;
+	display: flex;
+	background-color: $sec;
+	color: $white;
+	overflow: hidden;
+	cursor: pointer;
+	user-select: none;
+	position: relative;
+	align-items: center;
+	justify-content: space-between;
+	text-align: center;
+
+	&.big-chip {
+		border-radius: 999px;
+		column-gap: 15px;
+		padding: 0.75rem 1.5rem;
 	}
 }

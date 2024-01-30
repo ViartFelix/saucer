@@ -1,0 +1,41 @@
+section#filters
+{
+	$chip-border-radius: 2.15rem;
+	margin: 50px 0;
+
+	div.filters-title {
+		h2 {
+		}
+
+		svg {
+			display: block;
+			flex-grow: 1;
+			height: 100%;
+			width: 40px;
+		}
+	}
+
+	[data-filters] {
+		background-color: $sec;
+		color: $white;
+		padding: 0.75rem 1.5rem;
+		border-radius: 0 $chip-border-radius $chip-border-radius $chip-border-radius;
+
+
+		&:not(.hidden) {
+
+		}
+
+		&.hidden {
+
+		}
+	}
+
+	.big-chip {
+		border-radius: $chip-border-radius $chip-border-radius 0 0;
+
+		&.undeployed {
+			border-radius: 999px;
+		}
+	}
+}
