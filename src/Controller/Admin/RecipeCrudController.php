@@ -83,6 +83,13 @@ class RecipeCrudController extends AbstractCrudController
 
 		$entityInstance->setIdUser($this->getUser());
 
+		foreach ($entityInstance->getInstructions() as $instruction) {
+			$name = $this->fileHandler->handleFile($instruction->getMediaFile());
+
+			if(!empty($name)) $instruction->setMedia($name);
+			else $instruction->setMedia(null);
+		}
+
 		$now = DateTimeImmutable::createFromFormat('Y-m-d', date('Y-m-d'));
 		$entityInstance->setUpdatedAt($now);
 		$entityInstance->setCreatedAt($now);
@@ -100,6 +107,13 @@ class RecipeCrudController extends AbstractCrudController
 		foreach ($entityInstance->getRecipeIngredients() as $recipeIngredient) {
 			$ingredient = $recipeIngredient->getIngredient();
 			$recipeIngredient->setIngredient($ingredient);
+		}
+
+		foreach ($entityInstance->getInstructions() as $instruction) {
+			$name = $this->fileHandler->handleFile($instruction->getMediaFile());
+
+			if(!empty($name)) $instruction->setMedia($name);
+			else $instruction->setMedia(null);
 		}
 
 		parent::updateEntity($entityManager, $entityInstance);
