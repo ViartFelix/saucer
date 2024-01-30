@@ -116,6 +116,27 @@ class RecipesController extends AbstractController
 			->add('envoyer', SubmitType::class)
 			->getForm();
 
+			/*
+
+			<h2>Ingredients</h2>
+
+		<button type="button" class="add_item_link" data-collection-holder-class="ingredients">Ajouter ingredient</button>
+		<!--<a href="#" id="add-button">Ajouter instruction</a>-->
+		<div
+			id="ingredients">
+			{% for it in form.recipeIngredients %}
+				<div>{{ form_row(it) }}</div>
+			{% endfor %}
+		</div>
+
+		<div
+			data-index="{{ form.recipeIngredients|length > 0 ? form.recipeIngredients|last.vars.name + 1 : 0 }}"
+			data-prototype="{{ form_widget(form.recipeIngredients.vars.prototype)|e('html_attr') }}"
+			class="ingredients">
+		</div>
+
+			*/
+
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {
@@ -157,8 +178,11 @@ class RecipesController extends AbstractController
 				$recipe->addUstensil($ustensil);
 			}
 
-			foreach($form->get('recipeIngredients')->getData() as $ingredient) {
-				if(isset($ingredient)) $recipe->addRecipeIngredient($ingredient);
+
+			foreach($form->get('recipeIngredients')->getData() as $key => $recipeIngredient) {
+				$ingredient = $form->get('recipeIngredients')[$key]->get('ingredient')->getData() ?? null;
+				$recipeIngredient->setIngredient($ingredient);
+				$recipe->addRecipeIngredient($recipeIngredient);
 			}
 
 			$entityManager->persist($recipe);
@@ -183,8 +207,13 @@ class RecipesController extends AbstractController
 	#[Route('/recipes/{id}', name: 'app_recipes_single')]
 	public function single(Recipe $recipe): Response
 	{
-		$hasFavorite = $this->getUser()->getFavoriteRecipes()->contains($recipe);
+		$hasFavorite = null;
 
+		if($this->getUser() !== null)
+		{
+			$hasFavorite = $this->getUser()->getFavoriteRecipes()->contains($recipe);
+		}
+		
 		//Single recette
 		return $this->render('recipes/single.twig', [
 			"recipe" => $recipe,

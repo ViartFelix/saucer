@@ -19,15 +19,15 @@ class RecipeIngredient
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $unit = null;
 
-    #[ORM\ManyToOne(cascade: ["persist"], fetch: 'EXTRA_LAZY', inversedBy: 'recipeIngredients')]
+    #[ORM\ManyToOne(cascade: ["persist"], fetch: 'EAGER', inversedBy: 'recipeIngredients')]
     private ?Recipe $recipe = null;
 
-    #[ORM\OneToOne(inversedBy: 'recipeIngredient', cascade: ['persist', 'remove'], fetch: "EXTRA_LAZY")]
+    #[ORM\ManyToOne(cascade: ["persist"], fetch: 'EAGER', inversedBy: 'recipeIngredients')]
     private ?Ingredients $ingredient = null;
 
 	public function __toString()
 	{
-		return $this->ingredient->getNom(); // Assuming Ingredient entity has a 'name' property
+		return $this->ingredient->getNom();
 	}
 
     public function getId(): ?int

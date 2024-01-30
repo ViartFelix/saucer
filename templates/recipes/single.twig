@@ -62,14 +62,15 @@
 	<hr>
 
 	<h2>Favori ?</h2>
-	{% if favorite %}
-		Favori
-	{% else %}
-		Mettre en favori
+	{% if favorite is not empty %}
+		{% if favorite %}
+			<a href="{{ path('app_recipes_favorite', {'id': recipe.id}) }}">Favori</a>
+		{% else %}
+			<a href="{{ path('app_recipes_favorite', {'id': recipe.id}) }}">Mettre en favori</a>
+		{% endif %}
 	{% endif %}
-
 	<br/>
-		<a href="{{ path('app_recipes_favorite', {'id': recipe.id}) }}">Favori</a>
+
 	<hr>
 
 	<h2>Ustensiles</h2>
@@ -113,7 +114,6 @@
 				<img src="{{ asset('uploads/recipes/' ~ instruction.media) }}">
 				{{ instruction.content }}
 			</div>
-
 		</li>
 	{% endfor %}
 	</ul>

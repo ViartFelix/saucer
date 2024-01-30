@@ -11,10 +11,10 @@ main.container {
 	section#results {
 		div.grid-container {
 			div.grid-results {
-				display: flex;
-				grid-template-columns: repeat(4, minmax(100px, 1fr));
+				display: grid;
+				grid-template-columns: repeat(3, minmax(100px, 1fr));
 				grid-template-rows: auto;
-				gap: 10px;
+				gap: 30px;
 
 				article {
 					width: 100%;

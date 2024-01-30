@@ -21,9 +21,11 @@ class IngredientType extends AbstractType
 			->add('unit')
 			->add('ingredient', EntityType::class, [
 				'class' => Ingredients::class,
+				'choice_value' => "nom",
 				'choice_label' => 'nom', // Assuming 'nom' is the property of Ingredients entity you want to display
 				'label' => 'Ingredient',
 				'required' => true,
+				'by_reference' => false,
 				'placeholder' => 'Choose an ingredient',
 			]);
     }

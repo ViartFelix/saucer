@@ -10,8 +10,6 @@ services:
     App\Service\FileHandler:
         arguments:
             # $targetDirectory: '%kernel.project_dir%/public/uploads/recipes'
-    App\Form\Type\UserRolesType:
-        tags: [ 'form.type' ]
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.

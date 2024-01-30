@@ -5,11 +5,13 @@ namespace App\Controller\Admin;
 use App\Entity\Ingredients;
 use App\Entity\Instructions;
 use App\Entity\Recipe;
+use App\Entity\RecipeIngredient;
 use App\Entity\Ustensil;
 use App\Form\IngredientType;
 use App\Form\InstructionType;
 use App\Form\Type\IngredientsFormType;
 use DateTimeImmutable;
+use Doctrine\Common\Proxy\Proxy;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
@@ -30,7 +32,7 @@ class RecipeCrudController extends AbstractCrudController
 {
 
 	public function __construct(
-		private FileHandler $fileHandler
+		private readonly FileHandler $fileHandler
 	){}
 
     public static function getEntityFqcn(): string
@@ -56,11 +58,12 @@ class RecipeCrudController extends AbstractCrudController
 			->setFormTypeOption('by_reference', false)
 		;
 
-		yield AssociationField::new('recipeIngredients')
-			->setFormTypeOption('choice_label', 'ingredient')
-			//->setCrudController(RecipeIngredientCrudController::class)
+		yield CollectionField::new('recipeIngredients')
+			->setEntryType(IngredientType::class)
+			->setFormTypeOptions([
+				'mapped' => true
+			])
 		;
-
 		yield CollectionField::new('instructions')
 			->setEntryType(InstructionType::class)
 			->setFormTypeOptions([
@@ -71,12 +74,40 @@ class RecipeCrudController extends AbstractCrudController
 
 	public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
 	{
-		$this->persistUpdate($entityManager, $entityInstance);
+		if(!$entityInstance instanceof Recipe) return;
+
+		foreach ($entityInstance->getRecipeIngredients() as $recipeIngredient) {
+			$ingredient = $recipeIngredient->getIngredient();
+			$recipeIngredient->setIngredient($ingredient);
+		}
+
+		$entityInstance->setIdUser($this->getUser());
+
+		$now = DateTimeImmutable::createFromFormat('Y-m-d', date('Y-m-d'));
+		$entityInstance->setUpdatedAt($now);
+		$entityInstance->setCreatedAt($now);
+
+		parent::persistEntity($entityManager, $entityInstance);
 	}
 
 	public function updateEntity(EntityManagerInterface $entityManager, $entityInstance):void
 	{
-		$this->persistUpdate($entityManager, $entityInstance, true);
+		if(!$entityInstance instanceof Recipe) return;
+
+		$now = DateTimeImmutable::createFromFormat('Y-m-d', date('Y-m-d'));
+		$entityInstance->setUpdatedAt($now);
+
+		foreach ($entityInstance->getRecipeIngredients() as $recipeIngredient) {
+			$ingredient = $recipeIngredient->getIngredient();
+			$recipeIngredient->setIngredient($ingredient);
+		}
+
+		parent::updateEntity($entityManager, $entityInstance);
+	}
+
+	public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
+	{
+		parent::deleteEntity($entityManager, $entityInstance);
 	}
 
 	private function persistUpdate(EntityManagerInterface $entityManager, $entityInstance, $isUpdate = false): void
@@ -88,19 +119,6 @@ class RecipeCrudController extends AbstractCrudController
 				if(!empty($name)) $instruction->setMedia($name);
 				else $instruction->setMedia(null);
 			}
-		}
-
-		$now = DateTimeImmutable::createFromFormat('Y-m-d', date('Y-m-d'));
-
-		$entityInstance->setUpdatedAt($now);
-
-		if($isUpdate)
-		{
-			parent::updateEntity($entityManager, $entityInstance);
-		}
-		else {
-			$entityInstance->setCreatedAt($now);
-			parent::persistEntity($entityManager, $entityInstance);
 		}
 	}
 }

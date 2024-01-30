@@ -18,20 +18,17 @@ class Ingredients
     #[ORM\Column(length: 255)]
     private ?string $nom = null;
 
-	/*
-    #[ORM\ManyToMany(targetEntity: Recipe::class, inversedBy: 'ingredients')]
-    private Collection $idRecipe;
-	*/
+    #[ORM\OneToMany(mappedBy: 'ingredient', targetEntity: RecipeIngredient::class, fetch: 'EAGER')]
+    private Collection $recipeIngredients;
 
-    #[ORM\OneToOne(mappedBy: 'ingredient', cascade: ['persist', 'remove'], fetch: 'EXTRA_LAZY')]
-    private ?RecipeIngredient $recipeIngredient = null;
 
     public function __construct()
     {
-        //$this->idRecipe = new ArrayCollection();
+        $this->recipeIngredients = new ArrayCollection();
     }
 
-	public function __toString() {
+	public function __toString()
+	{
 		return $this->nom;
 	}
 
@@ -53,76 +50,32 @@ class Ingredients
     }
 
     /**
-     * @return Collection<int, Recipe>
+     * @return Collection<int, RecipeIngredient>
      */
-    public function getIdRecipe(): Collection
+    public function getRecipeIngredients(): Collection
     {
-        return $this->idRecipe;
+        return $this->recipeIngredients;
     }
 
-	/* TODO: les ingredients sont rajoutés même s'ils existent.
-    public function addIdRecipe(Recipe $idRecipe): static
+    public function addRecipeIngredient(RecipeIngredient $recipeIngredient): static
     {
-        if (!$this->idRecipe->contains($idRecipe)) {
-            $this->idRecipe->add($idRecipe);
-        }
-
-        return $this;
-    }
-
-    public function removeIdRecipe(Recipe $idRecipe): static
-    {
-        $this->idRecipe->removeElement($idRecipe);
-
-        return $this;
-    }
-
-    public function getQuantiy(): ?int
-    {
-        return $this->quantiy;
-    }
-
-    public function setQuantiy(?int $quantiy): static
-    {
-        $this->quantiy = $quantiy;
-
-        return $this;
-    }
-
-    public function getUnit(): ?string
-    {
-        return $this->unit;
-    }
-
-    public function setUnit(?string $unit): static
-    {
-        $this->unit = $unit;
-
-        return $this;
-    }
-	*/
-
-    public function getRecipeIngredient(): ?RecipeIngredient
-    {
-        return $this->recipeIngredient;
-    }
-
-    public function setRecipeIngredient(?RecipeIngredient $recipeIngredient): static
-    {
-        // unset the owning side of the relation if necessary
-        if ($recipeIngredient === null && $this->recipeIngredient !== null) {
-            $this->recipeIngredient->setIngredient(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if ($recipeIngredient !== null && $recipeIngredient->getIngredient() !== $this) {
+        if (!$this->recipeIngredients->contains($recipeIngredient)) {
+            $this->recipeIngredients->add($recipeIngredient);
             $recipeIngredient->setIngredient($this);
         }
 
-        $this->recipeIngredient = $recipeIngredient;
-
         return $this;
     }
 
+    public function removeRecipeIngredient(RecipeIngredient $recipeIngredient): static
+    {
+        if ($this->recipeIngredients->removeElement($recipeIngredient)) {
+            // set the owning side to null (unless already changed)
+            if ($recipeIngredient->getIngredient() === $this) {
+                $recipeIngredient->setIngredient(null);
+            }
+        }
 
+        return $this;
+    }
 }
