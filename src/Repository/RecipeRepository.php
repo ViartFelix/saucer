@@ -27,6 +27,7 @@ class RecipeRepository extends ServiceEntityRepository
 			->createQueryBuilder("r")
 		;
 
+
 		if(!empty($criteria["title"]))
 		{
 			$query
@@ -75,28 +76,23 @@ class RecipeRepository extends ServiceEntityRepository
 			;
 		}
 
-		if (!empty($criteria['ustensils']))
+		if (!empty($criteria['ustensils']) && sizeof($criteria['ustensils']) > 0)
 		{
-			//Somehow ça marche
 			$query
 				->innerJoin('r.ustensils', 'u')
 				->andWhere('u IN (:ustensils)')
 				->setParameter('ustensils', $criteria['ustensils']);
 		}
 
-		//dd($criteria);
-
-		/*
-		//Ne marche pas.
-		if (!empty($criteria['ingredients'])) {
+		if (!empty($criteria['ingredients']) && sizeof($criteria['ingredients']) > 0)
+		{
 			$query
-				->join('r.recipeIngredients', 'ri')
-				//->join('ri.ingredient', 'i')
-				//->andWhere(':ingredient MEMBER OF r.recipeIngredients')
-				//->setParameter('ingredient', $criteria['ingredients']);
+				->innerJoin('r.recipeIngredients', 'ri')
+				->join('ri.ingredient', 'i')
+				->andWhere('i IN (:ingredients)')
+				->setParameter('ingredients', $criteria['ingredients']);
 			;
 		}
-		*/
 
 		return $query->getQuery()->getResult();
 	}
