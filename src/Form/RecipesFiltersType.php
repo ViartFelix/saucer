@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\RangeType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -24,44 +25,80 @@ class RecipesFiltersType extends AbstractType
         $builder
 			->add('title', TextType::class, [
 				'label' => 'Title',
+				'attr' => [
+					'placeholder' => "Title",
+					'class' => 'target-input',
+				],
 				'required' => false,
 			])
-			->add('description', TextType::class, [
+			->add('description', TextareaType::class, [
 				'label' => 'Description',
+				'attr' => [
+					'placeholder' => "Description",
+					'class' => 'target-input',
+				],
 				'required' => false,
 			])
 			->add('cookTimeMin', IntegerType::class, [
 				'label' => 'Min Cook Time',
+				'attr' => [
+					'placeholder' => "Minimum cooking time",
+					'class' => 'target-input',
+				],
 				'required' => false,
 			])
 			->add('cookTimeMax', IntegerType::class, [
 				'label' => 'Max Cook Time',
+				'attr' => [
+					'placeholder' => "Maximum cooking time",
+					'class' => 'target-input',
+				],
 				'required' => false,
 			])
 			->add('prepTimeMin', IntegerType::class, [
 				'label' => 'Min Prep Time',
+				'attr' => [
+					'placeholder' => "Minimum preparation time",
+					'class' => 'target-input',
+				],
 				'required' => false,
 			])
 			->add('prepTimeMax', IntegerType::class, [
 				'label' => 'Max Prep Time',
+				'attr' => [
+					'placeholder' => "Maximum preparation time",
+					'class' => 'target-input',
+				],
 				'required' => false,
 			])
 			->add('ustensils', EntityType::class, [
 				'class' => Ustensil::class,
 				'choice_label' => 'nom',
 				'label' => 'Utensils',
+				'attr' => [
+					'class' => 'target-checkbox',
+				],
 				'required' => false,
 				'multiple' => true,
+				'expanded' => true,
 			])
 			->add('ingredients', EntityType::class, [
 				'class' => Ingredients::class,
 				'choice_label' => 'nom',
 				'label' => 'Ingredients',
+				'attr' => [
+					'class' => 'target-checkbox',
+				],
 				'required' => false,
 				'multiple' => true,
+				'expanded' => true,
 				"by_reference" => true,
 			])
-			->add("envoyer", SubmitType::class)
+			->add("filtrer", SubmitType::class, [
+				"attr" => [
+					"class" => 'target-submit',
+				]
+			])
         ;
     }
 

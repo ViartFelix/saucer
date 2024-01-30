@@ -36,7 +36,12 @@ class RecipesController extends AbstractController
     {
 		$repo = $entityManager->getRepository(Recipe::class);
 
-		$form = $this->createForm(RecipesFiltersType::class);
+		$form = $this->createForm(RecipesFiltersType::class, null,[
+			'attr' => [
+				'class' => 'form-container',
+				'id' => 'form-filters'
+			]
+		]);
 		$form->handleRequest($request);
 
 		$filteredRecipes = $repo->findAll();
