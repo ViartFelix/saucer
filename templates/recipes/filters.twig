@@ -51,17 +51,19 @@
 	</div>
 
 	<hr>
-	//https://alvinbunk.wordpress.com/2017/04/14/display-checkbox-group-properly-in-twig/
+	<!--https://alvinbunk.wordpress.com/2017/04/14/display-checkbox-group-properly-in-twig/-->
 
 	<div class="form-selects">
-		<div class="ustensils grid-lists">
-			{{ form_row(form.ustensils) }}
+		<div class="ustensils selected-row">
+			{{ form_label(form.ustensils) }}
+			{{ form_widget(form.ustensils) }}
 		</div>
 
 		<hr class="vertical">
 
-		<div class="ingredients grid-lists">
-			{{ form_row(form.ingredients) }}
+		<div class="ingredients selected-row">
+			{{ form_label(form.ingredients) }}
+			{{ form_widget(form.ingredients) }}
 		</div>
 
 	</div>

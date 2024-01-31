@@ -3,8 +3,14 @@ section#results {
 		div.grid-results {
 			display: grid;
 			grid-template-columns: repeat(3, minmax(100px, 1fr));
-			grid-template-rows: auto;
-			gap: 30px;
+			grid-template-rows: repeat(auto-fit, 400px);
+			grid-auto-flow: dense;
+			grid-gap: 2rem;
+
+			&::after {
+				content: "";
+				flex-grow: 999;
+			}
 
 			a {
 				width: 100%;
@@ -30,7 +36,6 @@ section#results {
 				}
 
 				div.article-container {
-					height: auto;
 					padding: 5px;
 
 					div.cook-prep-container {

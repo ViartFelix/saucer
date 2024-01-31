@@ -76,7 +76,10 @@ class RecipesFiltersType extends AbstractType
 				'choice_label' => 'nom',
 				'label' => 'Utensils',
 				'attr' => [
-					'class' => 'target-checkbox',
+					'class' => 'ustensils grid-list',
+				],
+				'label_attr' => [
+					'class' => 'select-title'
 				],
 				'required' => false,
 				'multiple' => true,
@@ -87,7 +90,10 @@ class RecipesFiltersType extends AbstractType
 				'choice_label' => 'nom',
 				'label' => 'Ingredients',
 				'attr' => [
-					'class' => 'target-checkbox',
+					'class' => 'ingredients grid-list',
+				],
+				'label_attr' => [
+					'class' => 'select-title'
 				],
 				'required' => false,
 				'multiple' => true,
