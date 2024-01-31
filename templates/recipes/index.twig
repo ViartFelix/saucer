@@ -10,16 +10,16 @@
 
 	<main class="container container-full container-translate">
 		<div class="title-container">
-			<h1>Liste des recettes.</h1>
+			<h1>Recipes available</h1>
 
 			{% if(can_create_recipes) %}
-				<a class="btn btn-large" href="{{ path('app_recipes_create') }}">Nouvelle recette</a>
+				<a class="btn btn-large" href="{{ path('app_recipes_create') }}">New recipe</a>
 			{% endif %}
 		</div>
 
 		<section id="filters">
 			<div data-filter-trigger class="filters-title chip big-chip undeployed">
-				<h2 class="prevent">Filtres</h2>
+				<h2 class="prevent">Filters</h2>
 				<span class="iconify" data-icon="mdi:filter"></span>
 			</div>
 
@@ -30,14 +30,14 @@
 		</section>
 
 		<section id="results">
-			<h2>Résultats</h2>
+			<h2>Results</h2>
 
 			<div class="grid-container">
 				{% if recipes|length == 0 %}
-					<h4>Aucune recette.</h4>
+					<h4>no recipe.</h4>
 
 					{% if(can_create_recipes) %}
-						<a class="btn btn-large" href="{{ path('app_recipes_create') }}">Nouvelle recette</a>
+						<a class="btn btn-large" href="{{ path('app_recipes_create') }}">New recipe</a>
 					{% endif %}
 				{% else %}
 

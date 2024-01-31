@@ -18,7 +18,7 @@
 
 				{% if is_granted('ROLE_USER') or is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
 					<a class="header-link-icon" href="{{ path('app_profile') }}">
-						<span class="link-text">Profil</span>
+						<span class="link-text">Profile</span>
 						<p class="link-icon">
 							<span class="iconify" data-icon="mdi:user"></span>
 						</p>
@@ -26,7 +26,7 @@
 
 					{% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
 						<a class="header-link-icon" href="{{ path('app_admin') }}">
-							<span class="link-text">Panel admin</span>
+							<span class="link-text">Admin panel</span>
 							<p class="link-icon">
 								<span class="iconify" data-icon="eos-icons:admin"></span>
 							</p>
