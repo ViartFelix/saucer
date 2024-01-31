@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Recipe;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Exception;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -20,6 +21,23 @@ class RecipeRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Recipe::class);
     }
+
+	/**
+	 * @throws Exception
+	 */
+	public function getNbrLikes(int $id)
+	{
+		$conn = $this->getEntityManager()->getConnection();
+
+		$sql = '
+			SELECT user_id
+			FROM user_recipe
+			WHERE recipe_id = '. $id .'
+		';
+
+		$nbrLikes = $conn->executeQuery($sql)->fetchAllAssociative();
+		return sizeof($nbrLikes);
+	}
 
 	public function findSearch($criteria): mixed
 	{

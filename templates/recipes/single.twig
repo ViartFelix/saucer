@@ -27,102 +27,148 @@
 
 {% block body %}
 	<main class="container-translate">
-		{% if recipe.thumbnail %}
-			<section id="thumbnail">
-				<img class="main-thumbnail" src="{{ asset('uploads/recipes/' ~ recipe.thumbnail) }}" alt="thumbnail"/>
-			</section>
-
-			<hr>
-		{% endif %}
-
 		<div class="container">
-			<section id="g-infos">
-				<h1>{{ recipe.title }}</h1>
-				<p><i>{{ recipe.description }}</i></p>
+			{% if recipe.thumbnail %}
+				<section id="thumbnail">
+					<img class="main-thumbnail" src="{{ asset('uploads/recipes/' ~ recipe.thumbnail) }}" alt="thumbnail"/>
+				</section>
+			{% endif %}
 
-				<p>Préparation: {{ recipe.prepTime }} mins</p>
-				<p>Cuisson: {{ recipe.cookTime }} mins</p>
-			</section>
+			<div class="content">
+				<section id="g-infos">
+					<h1>{{ recipe.title }}</h1>
+					<p class="description"><i>{{ recipe.description }}</i></p>
 
-			<hr>
+					<div class="timings-share">
+						<div class="timings">
+							<p class="prep">
+								<span class="iconify" data-icon="mingcute:time-fill"></span>
+								<span class="title-timing">Preparation time</span>
+								<span class="val-timing">{{ recipe.prepTime }} min(s)</span>
+							</p>
+							<p class="cook">
+								<span class="iconify" data-icon="mdi:fire"></span>
+								<span class="title-timing">Cooking time</span>
+								<span class="val-timing">{{ recipe.cookTime }} min(s)</span>
+							</p>
+						</div>
 
-			<section id="needs">
+						<hr class="vertical"/>
 
-			</section>
+						<div class="share">
+							<h5>Like</h5>
 
-			<hr>
+							<div class="fav">
+								{% if favorite is null %}
+									Please <a href="{{ path('app_login') }}">login</a> to add this to your favorites.
+								{% else %}
+									{% if favorite=='true' %}
+										<a class="fav-link" href="{{ path('app_recipes_favorite', {'id': recipe.id}) }}">
+											<span class="iconify icon-heart" data-icon="mdi:heart"></span>
+										</a>
+									{% else %}
+										<a class="fav-link" href="{{ path('app_recipes_favorite', {'id': recipe.id}) }}">
+											<span class="iconify icon-heart" data-icon="mdi:heart-outline"></span>
+										</a>
+									{% endif %}
 
-			<section id="instructions">
+									{% set nbrLikes = likes ?? 0 %}
 
-			</section>
-		</div>
+									<p class="nbr-likes">{{ nbrLikes }} like{{ nbrLikes > 1 ? 's' : '' }}</p>
+								{% endif %}
+							</div>
 
-	</main>
+							<h5>Share</h5>
+							{% include "common/share.twig" %}
+						</div>
+					</div>
+				</section>
 
+				<hr style="margin-top: 2rem !important;margin-bottom: -5px;">
 
+				<section id="needs">
+					<div class="ingredients need-container">
+						{% if recipe.recipeIngredients|length > 0 %}
+							<h5 class="cat-title">
+								{{ recipe.recipeIngredients|length }}
+								ingredient{{ recipe.recipeIngredients|length > 1 ? 's' : '' }}
+							</h5>
 
+							<ul class="cat-container">
+								{% for recipeIngre in recipe.recipeIngredients %}
+									<li>
+										{{ recipeIngre.quantity }}
+										{{ recipeIngre.unit }}
+										of
+										{{ recipeIngre.ingredient.nom }}
+									</li>
+								{% endfor %}
+							</ul>
+						{% else %}
+							<h5 class="cat-title">No ingredients are needed for this recipe.</h5>
+						{% endif %}
+					</div>
 
-	<hr>
+					<hr class="vertical"/>
 
-	<h2>Favori ?</h2>
-	{% if favorite is not empty %}
-		{% if favorite %}
-			<a href="{{ path('app_recipes_favorite', {'id': recipe.id}) }}">Favori</a>
-		{% else %}
-			<a href="{{ path('app_recipes_favorite', {'id': recipe.id}) }}">Mettre en favori</a>
-		{% endif %}
-	{% endif %}
-	<br/>
+					<div class="ustensils need-container">
+						{% if recipe.ustensils|length > 0 %}
+							<h5 class="cat-title">
+								{{ recipe.ustensils|length }}
+								ustensil{{ recipe.ustensils|length > 1 ? 's' : '' }}
+							</h5>
 
-	<hr>
+							<ul class="cat-container">
+								{% for ustensil in recipe.ustensils %}
+									<li>{{ ustensil.nom }}</li>
+								{% endfor %}
+							</ul>
+						{% else %}
+							<h5 class="cat-title">No ustensils are needed for this recipe.</h5>
+						{% endif %}
+					</div>
+				</section>
 
-	<h2>Ustensiles</h2>
+				<hr>
 
-	<ul>
-		{% for ustensil in recipe.ustensils %}
-			<li>
-				{{ ustensil.nom }}
-			</li>
-		{% endfor %}
-	</ul>
+				<section id="instructions">
+					{% if recipe.instructions|length > 0 %}
+						{% set index = 0 %}
+						{% for instruction in recipe.instructions %}
+							<div class="instruction-container">
+								<div class="step-separator">
+									<h3 class="target-step">
+										{% if index+1 < 10 %}
+											0{{ index+1 }}
+										{% else %}
+											{{ index+1 }}
+										{% endif %}
 
-	<hr>
+									</h3>
+								</div>
 
-	<h2>Partager</h2>
-	{% include "common/share.twig" %}
+								<div class="instruction-content">
+									{% if file_exists(instruction.media ?? 'a') %}
+										<div class="instruction-media">
+											<img class="target-media" src="{{ asset('uploads/recipes/' ~ instruction.media) }}" />
+										</div>
+									{% endif %}
 
-	<hr>
+									<div class="instruction-text">
+										{{ instruction.content }}
+									</div>
+								</div>
+							</div>
 
-	<h2>Ingredients</h2>
-
-	<ul>
-		{% for recipeIngre in recipe.recipeIngredients %}
-			<li>
-				{{ recipeIngre.quantity }}
-				{{ recipeIngre.unit }}
-				de
-				{{ recipeIngre.ingredient.nom }}s
-			</li>
-		{% endfor %}
-	</ul>
-
-	<hr>
-
-	<h2>Instructions</h2>
-
-	<ul>
-	{% for instruction in recipe.instructions %}
-		<li>
-			<div>
-				<img src="{{ asset('uploads/recipes/' ~ instruction.media) }}">
-				{{ instruction.content }}
+							{%  set index = index+1 %}
+						{% endfor %}
+					{% else %}
+						<h2 class="inst-title">No instructions.</h2>
+					{% endif %}
+				</section>
 			</div>
-		</li>
-	{% endfor %}
-	</ul>
-
-	<hr>
-
+		</div>
+	</main>
 {% endblock %}
 
 {% block javascripts %}

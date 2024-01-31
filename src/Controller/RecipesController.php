@@ -11,6 +11,7 @@ use App\Form\UstensilType;
 
 use App\Repository\UserRepository;
 use App\Service\FileHandler;
+use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -188,25 +189,33 @@ class RecipesController extends AbstractController
 	}
 
 	//Voir une seule recette
+
+	/**
+	 * @throws Exception
+	 */
 	#[Route('/recipes/{id}', name: 'app_recipes_single')]
-	public function single(Recipe $recipe): Response
+	public function single(Recipe $recipe, int $id, EntityManagerInterface $entityManager): Response
 	{
 		$hasFavorite = null;
 
 		if($this->getUser() !== null)
 		{
-			$hasFavorite = $this->getUser()->getFavoriteRecipes()->contains($recipe);
+			$hasFavorite = (bool)$this->getUser()->getFavoriteRecipes()->contains($recipe);
+			$hasFavorite = $hasFavorite ? 'true' : 'false';
 		}
-		
+
+		$repo = $entityManager->getRepository(Recipe::class);
+		$nbrLikes = $repo->getNbrLikes($id);
+
 		//Single recette
 		return $this->render('recipes/single.twig', [
 			"recipe" => $recipe,
 			"favorite" => $hasFavorite,
+			"likes" => $nbrLikes,
 		]);
 	}
 
 	#[Route('/recipes/{id}/favorite', name: 'app_recipes_favorite')]
-	#[IsGranted('ROLE_USER')]
 	public function toggleFav(Recipe $recipe, int $id, EntityManagerInterface $entityManager)//: RedirectResponse
 	{
 		$user = $this->getUser();

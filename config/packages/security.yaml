@@ -47,6 +47,7 @@ security:
         - { path: '^/admin', roles: [ROLE_ADMIN, ROLE_SUPER_ADMIN] }
         - { path: '^/profile', roles: [ROLE_SUPER_ADMIN, ROLE_ADMIN, ROLE_USER] }
         - { path: '^/recipes/new', roles: [ROLE_SUPER_ADMIN, ROLE_ADMIN, ROLE_USER]}
+        - { path: '^/recipes/[0-9]+/favorite', roles: [ROLE_SUPER_ADMIN, ROLE_ADMIN, ROLE_USER]}
 
 when@test:
     security:
