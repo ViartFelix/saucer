@@ -1,0 +1,45 @@
+@import "../../common/vars";
+@import "../../common/functions";
+@import "../../recipes/index/card";
+
+main.container {
+
+	ul {
+		margin: 1.5rem 0;
+	}
+
+	small {
+		display: block;
+		margin: 0.5rem 0 1rem 0;
+	}
+
+	h6 a {
+		color: $third;
+		text-decoration: underline;
+	}
+
+	.single-input {
+		display: flex;
+		flex-direction: column;
+
+		.target-input {
+			padding: 3px 7px;
+			border: 1.5px solid $black;
+			color: $black;
+			background-color: transparent;
+			border-radius: 5px;
+			font-size: 1.05rem;
+			transition: all 0.1s;
+			box-sizing: content-box;
+
+			&::placeholder {
+				color: lighten($black, 70%) !important;
+				font-family: 'Open Sans', serif;
+			}
+
+			&:focus-visible {
+				background-color: darken($white, 5%);
+			}
+		}
+	}
+}

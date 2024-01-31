@@ -23,6 +23,7 @@ let scssEntry = {
 
 	profile_css: "user/profile/index.scss",
 	profile_edit_css: "user/profile/edit.scss",
+	profile_reset_pwd_css: "user/profile/pwd-reset.scss",
 }
 
 Encore
