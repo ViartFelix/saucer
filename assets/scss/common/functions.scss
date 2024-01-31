@@ -18,3 +18,29 @@
 		padding: 0.75rem 1.5rem;
 	}
 }
+
+@mixin applyInput($bg, $border, $color)
+{
+	display: flex;
+	flex-direction: column;
+
+	.target-input {
+		padding: 3px 7px;
+		border: 1.5px solid $border;
+		color: $color;
+		background-color: transparent;
+		border-radius: 5px;
+		font-size: 1.05rem;
+		transition: all 0.1s;
+		box-sizing: content-box;
+
+		&::placeholder {
+			color: lighten($color, 70%) !important;
+			font-family: 'Open Sans', serif;
+		}
+
+		&:focus-visible {
+			background-color: darken($bg, 5%);
+		}
+	}
+}

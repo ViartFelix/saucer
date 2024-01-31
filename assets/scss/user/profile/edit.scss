@@ -21,28 +21,7 @@ main.container {
 		margin: 2rem 0;
 
 		.single-input {
-			display: flex;
-			flex-direction: column;
-
-			.target-input {
-				padding: 3px 7px;
-				border: 1.5px solid $black;
-				color: $black;
-				background-color: transparent;
-				border-radius: 5px;
-				font-size: 1.05rem;
-				transition: all 0.1s;
-				box-sizing: content-box;
-
-				&::placeholder {
-					color: lighten($black, 70%) !important;
-					font-family: 'Open Sans', serif;
-				}
-
-				&:focus-visible {
-					background-color: darken($white, 5%);
-				}
-			}
+			@include applyInput($white, $black, $black);
 		}
 
 		hr {

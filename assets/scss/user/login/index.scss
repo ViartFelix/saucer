@@ -1,0 +1,42 @@
+@import "../../common/vars";
+@import "../../common/functions";
+@import "../../recipes/index/card";
+
+main.container {
+	.form-container {
+		margin: 2rem 0;
+		display: grid;
+		grid-template-columns: 1fr 1px 1fr;
+		column-gap: 1rem;
+
+		.single-input {
+			padding: 5px 0;
+			@include applyInput($white, $black, $black);
+		}
+
+		hr {
+			width: 1px;
+			height: 100%;
+		}
+	}
+
+	.actions-buttons {
+		display: flex;
+		align-items: center;
+		max-width: 50%;
+
+		.forgot-btn {
+			background-color: $sec !important;
+		}
+
+		& > * {
+			margin: 0 1rem;
+			display: flex;
+			align-items: center;
+
+			svg {
+				margin-right: 0.75rem;
+			}
+		}
+	}
+}

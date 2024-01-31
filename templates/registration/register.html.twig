@@ -1,21 +1,43 @@
 {% extends "base.twig" %}
 
+{% block stylesheets %}
+	<link rel="stylesheet" href="{{ asset('build/register_css.css') }}">
+{% endblock %}
+
 {% block body %}
-    {% for flash_error in app.flashes('verify_email_error') %}
-        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-    {% endfor %}
+	<main class="container container-full container-translate">
+		<h1>Register</h1>
 
-    <h1>Register</h1>
 
-    {{ form_errors(registrationForm) }}
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+		{{ form_start(registrationForm) }}
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+			<ul class="form-errors">
+				{{ form_errors(registrationForm) }}
+				{% for flash_error in app.flashes('verify_email_error') %}
+					<div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+				{% endfor %}
+			</ul>
+
+			<div class="form-container">
+				<div data-i="email" id="i-email">
+					<div class="single-input">
+						<label> E-mail </label>
+						{{ form_widget(registrationForm.email) }}
+					</div>
+				</div>
+
+				<hr class="vertical">
+
+				<div data-i="pwd" id="i-pwd">
+					<div class="single-input">
+						<label> Password </label>
+						{{ form_widget(registrationForm.plainPassword) }}
+					</div>
+				</div>
+			</div>
+
+			<button type="submit" class="btn btn-large">Register</button>
+		{{ form_end(registrationForm) }}
+	</main>
 {% endblock %}

@@ -137,11 +137,14 @@ a {
 
 .chip {
 	@include appyChip($sec, $white);
-
 	width: fit-content;
 	display: flex;
-	background-color: $sec;
-	color: $white;
+}
 
+hr {
+	border: none;
+	width: 0;
+	height: 0;
+	background-color: darken($white, 10%);
 }
 

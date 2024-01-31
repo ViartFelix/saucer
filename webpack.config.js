@@ -8,6 +8,7 @@ if (!Encore.isRuntimeEnvironmentConfigured()) {
 
 let jsEntry = {
     main: "app.js",
+
 	recipe_index_js: "recipe/index/index.js",
 	recipe_single: "recipe/single/index.js"
 }
@@ -24,6 +25,9 @@ let scssEntry = {
 	profile_css: "user/profile/index.scss",
 	profile_edit_css: "user/profile/edit.scss",
 	profile_reset_pwd_css: "user/profile/pwd-reset.scss",
+
+	register_css: "user/register/index.scss",
+	login_css: "user/login/index.scss",
 }
 
 Encore

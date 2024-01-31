@@ -1,0 +1,28 @@
+@import "../../common/vars";
+@import "../../common/functions";
+@import "../../recipes/index/card";
+
+main.container {
+	h1 {
+		margin-bottom: 2rem;
+	}
+
+	form .form-container {
+		display: grid;
+		grid-template-columns: 1fr 1px 1fr;
+		gap: 1rem;
+
+		hr {
+			width: 1px;
+			height: 100%;
+		}
+	}
+
+	.single-input {
+		@include applyInput($white, $black, $black);
+	}
+
+	button {
+		margin-top: 2rem;
+	}
+}
