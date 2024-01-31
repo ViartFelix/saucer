@@ -1,5 +1,5 @@
 {% for recipe in recipes %}
-	<a href="{{ path('app_recipes_single', {'id': recipe.id}) }}">
+	<a class="card" href="{{ path('app_recipes_single', {'id': recipe.id}) }}">
 		{% if recipe.thumbnail is not null %}
 			<img class="recipe-img" src="{{ asset('uploads/recipes/' ~ recipe.thumbnail) }}" alt="recipe image">
 		{% endif %}

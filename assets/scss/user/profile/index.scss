@@ -1,0 +1,34 @@
+@import "../../common/vars";
+@import "../../common/functions";
+@import "../../recipes/index/card";
+
+main {
+	.container {
+		.title-btn-action {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 1rem;
+		}
+
+		.recipe-grid {
+			display: grid;
+			grid-template-columns: repeat(3, minmax(100px, 1fr));
+			grid-template-rows: repeat(auto-fit, 400px);
+			grid-auto-flow: dense;
+			grid-gap: 2rem;
+
+			.card {
+				display: block;
+			}
+		}
+
+		hr.sepa-profile {
+			border: none;
+			height: 1.5px;
+			background-color: darken($white, 10%);
+			margin: 2rem auto;
+			width: calc(90% - 1rem);
+		}
+	}
+}

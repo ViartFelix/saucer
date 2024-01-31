@@ -14,10 +14,14 @@ let jsEntry = {
 
 let scssEntry = {
     header: "header/header.scss",
+	common: "common/common.scss",
+
 	home: "home/index.scss",
+
 	recipes_index: "recipes/index/index.scss",
 	recipe_single_css: "recipes/single/single.scss",
-    common: "common/common.scss"
+
+	profile_css: "user/profile/index.scss"
 }
 
 Encore

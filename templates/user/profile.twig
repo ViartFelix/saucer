@@ -1,25 +1,51 @@
 {% extends "base.twig" %}
 
+{% block stylesheets %}
+	<link rel="stylesheet" href="{{ asset('build/profile_css.css') }}">
+{% endblock %}
+
 {% block body %}
-	Ton profil
-	<a href="{{ path('app_profile_edit') }}">Editer mon profil</a>
+	<main class="container-translate">
+		<div class="container container-full">
+			<div class="title-btn-action">
+				<h1>Your profile</h1>
+				<a class="btn btn-large" href="{{ path('app_profile_edit') }}">Edit</a>
+			</div>
 
-	<hr>
 
-	<h2>Favoris</h2>
-	<ul>
-		{% for fav in favorites %}
-			<li><a href="{{ path('app_recipes_single', {'id': fav.id}) }}">{{ fav.title }}</a></li>
-		{% endfor %}
-	</ul>
+			{% if favorites|length > 0 %}
+				{% set recipes = favorites %}
+				<hr class="sepa-profile">
 
-	<hr>
-	<h2>Mes recettes</h2>
+				<div class="favorites">
+					<h3>
+						{{ favorites|length }}
+						favorite
+						recipe{{ favorites|length > 1 ? 's' : '' }}
+					</h3>
 
-	<ul>
-		{% for recipe in user.recipes %}
-			<li><a href="{{ path('app_recipes_single', {'id': recipe.id}) }}">{{ recipe.title }}</a></li>
-		{% endfor %}
-	</ul>
+					<div class="favorites-grid recipe-grid">
+						{% include "recipes/list.twig" %}
+					</div>
+				</div>
+			{% endif %}
 
+			{% if user.recipes|length > 0 %}
+				{% set recipes = user.recipes %}
+				<hr class="sepa-profile">
+
+				<div class="made">
+					<h3>
+						{{ recipes|length }}
+						recipe{{ recipes|length > 1 ? 's' : '' }}
+						created
+					</h3>
+
+					<div class="own-recipes recipe-grid">
+						{% include "recipes/list.twig" %}
+					</div>
+				</div>
+			{% endif %}
+		</div>
+	</main>
 {% endblock %}

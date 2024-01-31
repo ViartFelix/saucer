@@ -189,10 +189,6 @@ class RecipesController extends AbstractController
 	}
 
 	//Voir une seule recette
-
-	/**
-	 * @throws Exception
-	 */
 	#[Route('/recipes/{id}', name: 'app_recipes_single')]
 	public function single(Recipe $recipe, int $id, EntityManagerInterface $entityManager): Response
 	{

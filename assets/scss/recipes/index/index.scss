@@ -1,5 +1,5 @@
 @import "../../common/vars";
-@import "list";
+@import "card";
 @import "filters";
 
 main.container {
@@ -7,5 +7,22 @@ main.container {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
+	}
+
+	section#results {
+		div.grid-container {
+			div.grid-results {
+				display: grid;
+				grid-template-columns: repeat(3, minmax(100px, 1fr));
+				grid-template-rows: repeat(auto-fit, 400px);
+				grid-auto-flow: dense;
+				grid-gap: 2rem;
+
+				&::after {
+					content: "";
+					flex-grow: 999;
+				}
+			}
+		}
 	}
 }
