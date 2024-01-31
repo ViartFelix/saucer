@@ -1,0 +1,89 @@
+@import "../../common/vars";
+@import "../../common/functions";
+@import "../../recipes/index/card";
+
+main.container {
+
+	div.title-row {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+
+		p {
+			font-size: 1.15rem;
+		}
+	}
+
+	div.edit-container {
+		display: grid;
+		grid-template-columns: 1fr 1px 1fr;
+		gap: 2rem;
+		margin: 2rem 0;
+
+		.single-input {
+			display: flex;
+			flex-direction: column;
+
+			.target-input {
+				padding: 3px 7px;
+				border: 1.5px solid $black;
+				color: $black;
+				background-color: transparent;
+				border-radius: 5px;
+				font-size: 1.05rem;
+				transition: all 0.1s;
+				box-sizing: content-box;
+
+				&::placeholder {
+					color: lighten($black, 70%) !important;
+					font-family: 'Open Sans', serif;
+				}
+
+				&:focus-visible {
+					background-color: darken($white, 5%);
+				}
+			}
+		}
+
+		hr {
+			border: none;
+			width: 1px;
+			height: 100%;
+			background-color: darken($white, 20%);
+		}
+	}
+
+
+
+	div.action-btns {
+		display: flex;
+		align-items: center;
+
+		.btn {
+			flex-basis: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			height: 100%;
+			flex-grow: 1;
+			margin: 0.5rem 1rem;
+
+			svg {
+				margin-right: 0.5rem;
+			}
+
+			&:not(button)
+			{
+				padding: 5px 0;
+			}
+
+			&.pwd-reset-btn {
+				background-color: $black;
+			}
+
+			&.cancel-btn {
+				background-color: $sec !important;
+			}
+		}
+	}
+}

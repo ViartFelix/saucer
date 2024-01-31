@@ -51,12 +51,25 @@ class UserController extends AbstractController
 
 		$form = $this->createFormBuilder($user)
 			->add('nom', TextType::class, [
+				"label" => "Last name",
 				"required" => false,
+				"attr" => [
+					"class" => "target-input"
+				],
 			])
 			->add('prenom', TextType::class, [
+				"label" => "First name",
 				"required" => false,
+				"attr" => [
+					"class" => "target-input"
+				],
 			])
-			->add('envoyer', SubmitType::class)
+			->add('send', SubmitType::class, [
+				"label" => "Send",
+				"attr" => [
+					"class" => "send-btn"
+				],
+			])
 			->getForm();
 
 		$form->handleRequest($request);
@@ -72,8 +85,11 @@ class UserController extends AbstractController
 			return $this->redirectToRoute('app_profile');
 		}
 
+		$id = $user->getUserIdentifier();
+
 		return $this->render('user/profile_edit.twig', [
 			"form" => $form,
+			"user" => $id,
 		]);
 	}
 }

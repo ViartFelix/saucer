@@ -1,23 +1,71 @@
 {% extends "base.twig" %}
 
+{% block stylesheets %}
+	<link rel="stylesheet" href="{{ asset('build/profile_edit_css.css') }}">
+{% endblock %}
+
 {% block body %}
-	Edition profil. <br>
+	<main class="container container-translate container-full">
+		<div class="title-row">
+			<h1>Edit profile</h1>
 
-	{{ form_errors(form) }}
-
-
-	{{ form_start(form) }}
-		{{ form_row(form.nom) }}
-		<hr>
-		{{ form_row(form.prenom) }}
-		<hr/>
-
-		{{ form_row(form.envoyer) }}
-	{{ form_end(form) }}
-
-	<hr/>
+			<p><i>{{ user }}</i></p>
+		</div>
 
 
-	<a href="{{ path('app_forgot_password_request') }}">Modifier mon mot de passe</a>
+		<ul class="form-errors">
+			{{ form_errors(form) }}
+		</ul>
 
+		{{ form_start(form) }}
+			<div class="edit-container">
+				<div data-i="nom" id="i-nom">
+					<div class="single-input">
+						<label> {{ form.nom.vars.label }} </label>
+						{{ form_widget(form.nom) }}
+					</div>
+				</div>
+
+				<hr class="vertical">
+
+				<div data-i="prenom" id="i-prenom">
+					<div class="single-input">
+						<label> {{ form.prenom.vars.label }} </label>
+						{{ form_widget(form.prenom) }}
+					</div>
+				</div>
+			</div>
+
+			<div class="action-btns">
+				<button
+					id="form_send"
+					class="send-btn btn btn-large"
+					type="submit"
+					name="form[send]"
+				>
+					<span class="iconify" data-icon="mdi:tick"></span>
+					Send
+				</button>
+
+				<a
+					class="cancel-btn btn btn-large"
+					href="{{ path('app_profile') }}"
+				>
+					<span class="iconify" data-icon="material-symbols:cancel"></span>
+					Cancel
+				</a>
+
+				<a
+					class="pwd-reset-btn btn btn-large"
+					href="{{ path('app_forgot_password_request') }}"
+				>
+					<span class="iconify" data-icon="mdi:password-reset"></span>
+					Password reset
+				</a>
+			</div>
+
+		{{ form_row(form._token) }}
+
+		{{ form_end(form, {'render_rest': false}) }}
+	</main>
 {% endblock %}

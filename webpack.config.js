@@ -21,7 +21,8 @@ let scssEntry = {
 	recipes_index: "recipes/index/index.scss",
 	recipe_single_css: "recipes/single/single.scss",
 
-	profile_css: "user/profile/index.scss"
+	profile_css: "user/profile/index.scss",
+	profile_edit_css: "user/profile/edit.scss",
 }
 
 Encore
