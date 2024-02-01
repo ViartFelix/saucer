@@ -1,0 +1,12 @@
+{% extends "base.twig" %}
+
+{% block title %}  {% endblock %}
+
+{% block body %}
+	<main class="container container-full container-translate err-screen">
+		<h1>{{ httpCode }}</h1>
+		<h5>{{ httpMessage }}</h5>
+
+		<a class="btn btn-large" href="{{ path('app_home') }}">Go back to safety !</a>
+	</main>
+{% endblock %}
