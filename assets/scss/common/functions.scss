@@ -44,3 +44,33 @@
 		}
 	}
 }
+
+@mixin applySelectChip($bg, $border, $color, $bg-select)
+{
+	input[type="checkbox"] {
+		display: none;
+		opacity: 0;
+
+		&:checked + label {
+			background-color: $bg-select;
+		}
+	}
+
+	label {
+		height: fit-content;
+		width: fit-content;
+		margin: 0.1rem 0.2rem;
+		transition: all 0.1s ease-in-out;
+		border: 2px solid $border;
+		background-color: lighten($bg, 2%);
+		@include appyChip(transparent, $color);
+
+		&::first-letter {
+			text-transform: uppercase;
+		}
+
+		&:hover {
+			background-color: darken($bg, 25%);
+		}
+	}
+}

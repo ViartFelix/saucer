@@ -10,7 +10,8 @@ let jsEntry = {
     main: "app.js",
 
 	recipe_index_js: "recipe/index/index.js",
-	recipe_single: "recipe/single/index.js"
+	recipe_new: "recipe/new/index.js",
+	recipe_single_js: "recipe/single/index.js"
 }
 
 let scssEntry = {
@@ -21,6 +22,7 @@ let scssEntry = {
 
 	recipes_index: "recipes/index/index.scss",
 	recipe_single_css: "recipes/single/single.scss",
+	recipe_new_css: "recipes/new/index.scss",
 
 	profile_css: "user/profile/index.scss",
 	profile_edit_css: "user/profile/edit.scss",
@@ -50,7 +52,7 @@ Encore
     .splitEntryChunks()
 
     // will require an extra script tag for runtime.js
-    // but, you probably want this, unless you're building a single-page app
+    // but, you probably want this, unless you're building a new-page app
     .enableSingleRuntimeChunk()
 
     /*

@@ -34,17 +34,6 @@ main {
 			&:not(:first-child):not(:last-child) {
 				padding: 0.5rem;
 			}
-
-			/*
-			&:first-child {
-				margin: 0 $section-margin $section-margin $section-margin;
-			}
-
-			&:last-child {
-				margin: $section-margin $section-margin 0 $section-margin;
-			}
-
-			 */
 		}
 
 		& > hr {
@@ -256,7 +245,7 @@ main {
 			}
 
 			div.instruction-content {
-				img.target-media {
+				.target-media {
 					width: 100%;
 					max-height: 75vh;
 					object-fit: contain;

@@ -28,9 +28,9 @@
 {% block body %}
 	<main class="container-translate">
 		<div class="container">
-			{% if recipe.thumbnail %}
+			{% if recipe.thumbnail and recipe.thumbnail is not null %}
 				<section id="thumbnail">
-					<img class="main-thumbnail" src="{{ asset('uploads/recipes/' ~ recipe.thumbnail) }}" alt="thumbnail"/>
+					{% include "common/mediaDisplay.twig" with { file: recipe.thumbnail, attrs: {"class": "main-thumbnail"} } %}
 				</section>
 			{% endif %}
 
@@ -118,7 +118,6 @@
 									<li>
 										{{ recipeIngre.quantity }}
 										{{ recipeIngre.unit }}
-										of
 										{{ recipeIngre.ingredient.nom }}
 									</li>
 								{% endfor %}
@@ -167,10 +166,15 @@
 								</div>
 
 								<div class="instruction-content">
-									{% if file_exists(instruction.media ?? 'a') %}
-										<div class="instruction-media">
-											<img class="target-media" src="{{ asset('uploads/recipes/' ~ instruction.media) }}" />
-										</div>
+									{% if instruction.media is not null %}
+										{% include "common/mediaDisplay.twig"
+										with {
+											file: instruction.media,
+											attr: {
+												"class": "target-media",
+												"controls": "true",
+											}
+										} %}
 									{% endif %}
 
 									<div class="instruction-text">
@@ -191,5 +195,5 @@
 {% endblock %}
 
 {% block javascripts %}
-	{{ encore_entry_script_tags('recipe_single') }}
+	{{ encore_entry_script_tags('recipe_single_js') }}
 {% endblock %}

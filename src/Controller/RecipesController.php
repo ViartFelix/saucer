@@ -67,6 +67,17 @@ class RecipesController extends AbstractController
 
 		$form = $this->createFormBuilder($recipe)
 			->add('title', TextType::class, [
+				"label" => "Title",
+				"attr" => [
+					"class" => "target-input",
+				],
+				"required" => false,
+			])
+			->add('description', TextareaType::class, [
+				"label" => "Description",
+				"attr" => [
+					"class" => "target-input",
+				],
 				"required" => false,
 			])
 			->add('instructions', CollectionType::class, [
@@ -80,6 +91,8 @@ class RecipesController extends AbstractController
 			])
 			->add('ustensils', null, [
 				'choice_label' => 'nom',
+				'multiple' => true,
+				'expanded' => true,
 			])
 			->add('recipeIngredients', CollectionType::class, [
 				"entry_type" => IngredientType::class,
@@ -91,15 +104,18 @@ class RecipesController extends AbstractController
 				'by_reference' => false,
 				"mapped" => false,
 			])
-			->add('description', TextareaType::class, [
-				"required" => false,
-			])
 			->add('prep_time', NumberType::class, [
-				"label" => "Temps de préparation",
+				"label" => "Preparation time",
+				"attr" => [
+					"class" => "target-input",
+				],
 				"required" => true,
 			])
 			->add('cook_time', NumberType::class, [
-				"label" => "Temps de cuisson",
+				"label" => "Cooking time",
+				"attr" => [
+					"class" => "target-input",
+				],
 				"required" => true,
 			])
 			->add('thumbnail', FileType::class, [
@@ -115,11 +131,15 @@ class RecipesController extends AbstractController
 							'image/png',
 							'image/webp',
 						],
-						'mimeTypesMessage' => 'SVP téléversez une image valide (.png, .jpg, .jpeg ou .webp) et en-dessous de 4Mo',
+						'mimeTypesMessage' => 'Please select a valid image (.png, .jpg, .jpeg or .webp) and bellow 4Mb',
 					])
 				],
 			])
-			->add('envoyer', SubmitType::class)
+			->add('send', SubmitType::class, [
+				"attr" => [
+					"class" => "btn btn-large"
+				]
+			])
 			->getForm();
 
 		$form->handleRequest($request);
@@ -137,7 +157,6 @@ class RecipesController extends AbstractController
 				$safeFilename = $slugger->slug($ogFileName);
 				$newFilename = $safeFilename.'-'.uniqid().'.'.$thumbnail->guessExtension();
 
-				//TODO: faire un insert, prendre l'ID, et donner le dir du fichier l'ID, puis le bouger dedans
 				$thumbnail->move(
 					$this->getParameter("photo_recipes"),
 					$newFilename,
@@ -215,7 +234,7 @@ class RecipesController extends AbstractController
 	}
 
 	#[Route('/recipes/{id}/favorite', name: 'app_recipes_favorite')]
-	public function toggleFav(Recipe $recipe, int $id, EntityManagerInterface $entityManager)//: RedirectResponse
+	public function toggleFav(Recipe $recipe, int $id, EntityManagerInterface $entityManager): RedirectResponse
 	{
 		$user = $this->getUser();
 		$hasFavorite = $user->getFavoriteRecipes()->contains($recipe);

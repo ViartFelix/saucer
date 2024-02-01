@@ -1,0 +1,61 @@
+{# templates/common/mediaDisplayer.twig #}
+
+{% set tFile = file ?? null %}
+{% set attrs = attr ?? [] %}
+
+{% set formats = {
+	"video": [
+		"mp4",
+		"mov",
+		"avi",
+		"webm",
+		"mpeg",
+		"x-m4v",
+		"quicktime",
+	],
+	"image": [
+		"gif",
+		"jpeg",
+		"png",
+		"webp",
+	],
+	"audio": [
+		"mpeg",
+		"wav",
+		"ogg",
+		"mp3",
+		"m4a",
+		"mp2",
+	]
+} %}
+
+{% if tFile is not null %}
+	{% if file_exists(tFile ?? 'a') %}
+		{% set fileFormat = tFile|split(".")|last %}
+
+		{% if fileFormat in formats.video %}
+			<video
+				{% for attr, val in attrs %}
+					{{ attr }}="{{ val|e('html_attr') }}"
+				{% endfor %}
+			>
+				<source src="{{ asset('uploads/recipes/' ~ tFile) }}" />
+			</video>
+		{% elseif fileFormat in formats.image %}
+			<img
+				{% for attr, val in attrs %}
+					{{ attr }}="{{ val|e('html_attr') }}"
+				{% endfor %}
+				src="{{ asset('uploads/recipes/' ~ tFile) }}"
+			>
+		{% elseif fileFormat in formats.audio %}
+			<audio
+				src="{{ asset('uploads/recipes/' ~ tFile) }}"
+				{% for attr, val in attrs %}
+					{{ attr }}="{{ val|e('html_attr') }}"
+				{% endfor %}
+			>
+			</audio>
+		{% endif %}
+	{% endif %}
+{% endif %}

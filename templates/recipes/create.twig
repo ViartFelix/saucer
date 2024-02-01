@@ -1,71 +1,136 @@
 {% extends "base.twig" %}
 
+{% block stylesheets %}
+	<link rel="stylesheet" href="{{ asset('build/recipe_new_css.css') }}">
+{% endblock %}
+
 {% block body %}
-	<h1>Nouvelle recette</h1>
+	<main class="container container-full container-translate">
+		{{ form_start(form) }}
+		<div class="title-send">
+			<h1>New recipe</h1>
 
-	{{ form_errors(form) }}
-
-	{{ form_start(form) }}
-		{{ form_row(form.title) }}
-		{{ form_row(form.description) }}
-		<hr/>
-		{{ form_row(form.prep_time) }}
-		{{ form_row(form.cook_time) }}
-		<hr/>
-		{{ form_row(form.thumbnail) }}
-		<hr/>
-
-		<button type="button" class="add_item_link" data-collection-holder-class="instructions">Ajouter instruction</button>
-		<!--<a href="#" id="add-button">Ajouter instruction</a>-->
-		<div
-			id="instructions">
-			{% for it in form.instructions %}
-				<div>{{ form_row(it) }}</div>
-			{% endfor %}
+			{{ form_widget(form.send) }}
 		</div>
 
-		<div
-			data-index="{{ form.instructions|length > 0 ? form.instructions|last.vars.name + 1 : 0 }}"
-			data-prototype="{{ form_widget(form.instructions.vars.prototype)|e('html_attr') }}"
-			class="instructions">
-		</div>
+		{{ form_errors(form) }}
+
+		<section id="top">
+			<div class="thumbnail-input">
+				<img id="thumbnail-preview" class="target-thumbnail notOK">
+
+				<div id="thumbnail-real-input" class="hidden">
+					{{ form_widget(form.thumbnail) }}
+				</div>
+			</div>
+
+			<div class="title-input single-input">
+				<label>{{ form.title.vars.label }}</label>
+				{{ form_widget(form.title) }}
+			</div>
+
+			<div class="desc-input single-input">
+				<label>{{ form.description.vars.label }}</label>
+				{{ form_widget(form.description) }}
+			</div>
+		</section>
 
 		<hr/>
 
-		{{ form_row(form.ustensils) }}
+		<section id="timings">
+			<div class="timing-input single-input">
+				<span class="iconify" data-icon="mingcute:time-fill"></span>
+				<label>{{ form.prep_time.vars.label }} (minutes)</label>
+				{{ form_widget(form.prep_time) }}
+			</div>
+
+			<hr class="vertical">
+
+			<div class="timing-input single-input">
+				<span class="iconify" data-icon="mdi:fire"></span>
+				<label>{{ form.cook_time.vars.label }} (minutes)</label>
+				{{ form_widget(form.cook_time) }}
+			</div>
+		</section>
 
 		<hr/>
 
-		<h2>Ingredients</h2>
-
-		<button type="button" class="add_item_link" data-collection-holder-class="ingredients">Ajouter ingredient</button>
-		<!--<a href="#" id="add-button">Ajouter instruction</a>-->
-		<div
-			id="ingredients">
-			{% for it in form.recipeIngredients %}
-				<div>{{ form_row(it) }}</div>
-			{% endfor %}
-		</div>
-
-		<div
-			data-index="{{ form.recipeIngredients|length > 0 ? form.recipeIngredients|last.vars.name + 1 : 0 }}"
-			data-prototype="{{ form_widget(form.recipeIngredients.vars.prototype)|e('html_attr') }}"
-			class="ingredients">
-		</div>
+		<section id="ustensils">
+			<h3>Ustensils</h3>
+			<div class="list-ustensils">
+				{{ form_widget(form.ustensils) }}
+			</div>
+		</section>
 
 		<hr/>
 
-		{{ form_row(form.envoyer) }}
+		<section id="ingredients-container">
+			<div class="title-btn">
+				<h3>Ingredients</h3>
 
+				<div class="ingredient-add">
+					<button type="button" class="add_item_link btn btn-large" data-collection-holder-class="ingredients">
+						<span class="iconify" data-icon="ic:outline-add-box"></span>
+						Add ingredient
+					</button>
+				</div>
+			</div>
 
+			<div
+				data-index="{{ form.recipeIngredients|length > 0 ? form.recipeIngredients|last.vars.name + 1 : 0 }}"
+				data-prototype="{{ form_widget(form.recipeIngredients.vars.prototype)|e('html_attr') }}"
+				class="ingredients"
+				id="ingredients"
+			>
+				{% for it in form.recipeIngredients %}
+					<div>
+						<div id>
+							<div>
+								{{ form_row(it.ingredient) }}
+							</div>
+							<div>
+								{{ form_row(it.quantity) }}
+							</div>
+							<div>
+								{{ form_row(it.unit) }}
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</section>
 
-	{{ form_end(form) }}
+		<hr/>
 
+		<section id="instructions-container">
+			<div
+				data-index="{{ form.instructions|length > 0 ? form.instructions|last.vars.name + 1 : 0 }}"
+				data-prototype="{{ form_widget(form.instructions.vars.prototype)|e('html_attr') }}"
+				class="instructions"
+				id="instructions"
+			>
+				{% for it in form.instructions %}
+					{{ form_widget(it.mediaFile) }}
+					{{ form_widget(it.content) }}
+				{% endfor %}
+			</div>
 
+			<div class="instruction-add-container">
+				<button type="button" class="add_item_link btn btn-large" data-collection-holder-class="instructions">
+					<span class="iconify" data-icon="ci:list-add"></span>
+					Add instruction
+				</button>
+			</div>
+		</section>
+
+		{{ form_row(form._token) }}
+
+		{{ form_end(form, {'render_rest': false}) }}
+	</main>
 
 	<span id="__last-ID__" style="display: none; opacity: 0">0</span>
 {% endblock %}
 
 {% block javascripts %}
-	{{ encore_entry_script_tags('recipe_single') }}
+	{{ encore_entry_script_tags('recipe_new') }}
 {% endblock %}

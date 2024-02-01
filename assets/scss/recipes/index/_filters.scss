@@ -64,23 +64,11 @@ section#filters
 			display: flex;
 			flex-direction: column;
 
+			@include applyInput($sec, $black, $white);
+
 			.target-input {
-				padding: 3px 7px;
-				border: 1.5px solid $black;
-				color: $white;
-				background-color: transparent;
-				border-radius: 5px;
-				font-size: 1.05rem;
-				transition: all 0.1s;
-				box-sizing: content-box;
-
-				&::placeholder {
-					color: lighten($black, 70%) !important;
-					font-family: 'Open Sans', serif;
-				}
-
 				&:focus-visible {
-					background-color: lighten($sec, 2%);
+					background-color: lighten($sec, 2%) !important;
 				}
 			}
 		}
@@ -103,33 +91,7 @@ section#filters
 
 		.grid-list {
 			display: flex;
-
-			input[type="checkbox"] {
-				display: none;
-				opacity: 0;
-
-				&:checked + label {
-					background-color: $black;
-				}
-			}
-
-			label {
-				height: fit-content;
-				width: fit-content;
-				margin: 0.1rem 0.2rem;
-				transition: all 0.1s ease-in-out;
-				border: 2px solid $black;
-				background-color: lighten($sec, 2%);
-				@include appyChip(transparent, $white);
-
-				&::first-letter {
-					text-transform: uppercase;
-				}
-
-				&:hover {
-					background-color: darken($sec, 25%);
-				}
-			}
+			@include applySelectChip($sec, $black, $white, $black);
 		}
 
 		.select-title {

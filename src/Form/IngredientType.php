@@ -17,16 +17,27 @@ class IngredientType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
 		$builder
-			->add('quantity')
-			->add('unit')
+			->add('quantity', null, [
+				'attr' => [
+					'class' => 'target-input',
+				],
+			])
+			->add('unit', null, [
+				'attr' => [
+					'class' => 'target-input',
+				],
+			])
 			->add('ingredient', EntityType::class, [
 				'class' => Ingredients::class,
 				'choice_value' => "nom",
-				'choice_label' => 'nom', // Assuming 'nom' is the property of Ingredients entity you want to display
+				'choice_label' => 'nom',
 				'label' => 'Ingredient',
 				'required' => true,
 				'by_reference' => false,
-				'placeholder' => 'Choose an ingredient',
+				'attr' => [
+					'class' => 'target-input',
+				],
+				'placeholder' => 'Choose an ingredient (select this to delete it)',
 			]);
     }
 
