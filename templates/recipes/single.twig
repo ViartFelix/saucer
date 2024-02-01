@@ -25,6 +25,10 @@
 	<link rel="stylesheet" href="{{ asset('build/recipe_single_css.css') }}">
 {% endblock %}
 
+{% block title %}
+	{{ recipe.title ?? recipe.description ?? ("Recipe by " ~ author.userIdentifier) }}
+{% endblock %}
+
 {% block body %}
 	<main class="container-translate">
 		<div class="container">

@@ -6,7 +6,8 @@ const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)
 let headerHeight = $("header#main-header").height()
 let screenHeight = screen.height;
 
-if(prefersReducedMotion)
+
+if(prefersReducedMotion.matches === true)
 {
 	gsap.to(".container-translate", {
 		y: (screenHeight.toString()) * 0.5,
@@ -21,18 +22,16 @@ if(prefersReducedMotion)
 	})
 }
 else {
-	$(()=>{
-		gsap.to(".container-translate", {
-			y: (screenHeight.toString()) * 0.5,
-			duration: 0,
-			opacity: 0,
-		})
+	gsap.to(".container-translate", {
+		y: (screenHeight.toString()) * 0.5,
+		duration: 0,
+		opacity: 0,
+	})
 
-		gsap.to(".container-translate", {
-			y: 0.75 * headerHeight,
-			duration: 1.25,
-			opacity: 1,
-			ease: "power3.out"
-		})
+	gsap.to(".container-translate", {
+		y: 0.75 * headerHeight,
+		duration: 1.25,
+		opacity: 1,
+		ease: "power3.out"
 	})
 }
