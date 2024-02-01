@@ -26,6 +26,7 @@ h1, h2, h3, h4, h5, h6, p, ul, body, main {
 }
 
 body {
+	position: relative;
 	padding-bottom: 10rem;
 }
 
@@ -148,3 +149,13 @@ hr {
 	background-color: darken($white, 10%);
 }
 
+img#main-bg {
+	position: fixed;
+	width: 100vw;
+	height: 100vh;
+	object-fit: cover;
+	object-position: center;
+	z-index: -1;
+	top: 0;
+	left: 0;
+}
