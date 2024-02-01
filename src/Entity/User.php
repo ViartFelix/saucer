@@ -44,7 +44,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $prenom = null;
 
 	#[ORM\Column]
-                   private ?bool $isVerified = null;
+   private ?bool $isVerified = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
@@ -55,7 +55,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $deleted_at = null;
 
-    #[ORM\OneToMany(mappedBy: 'idUser', targetEntity: Recipe::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'idUser', targetEntity: Recipe::class, cascade: ['remove'], orphanRemoval: true)]
     private Collection $recipes;
 
     #[ORM\ManyToMany(targetEntity: Recipe::class)]

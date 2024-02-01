@@ -59,24 +59,43 @@
 							<h5>Like</h5>
 
 							<div class="fav">
+								{% set nbrLikes = likes ?? 0 %}
+
 								{% if favorite is null %}
+									<div class="fav-action">
+										<span class="iconify icon-heart" data-icon="mdi:heart"></span> <p class="nbr-likes">{{ nbrLikes }} like{{ nbrLikes > 1 ? 's' : '' }}</p>
+									</div>
+
 									Please <a href="{{ path('app_login') }}">login</a> to add this to your favorites.
 								{% else %}
 									{% if favorite=='true' %}
-										<a class="fav-link" href="{{ path('app_recipes_favorite', {'id': recipe.id}) }}">
-											<span class="iconify icon-heart" data-icon="mdi:heart"></span>
-										</a>
+										<div class="fav-action">
+											<a class="fav-link" href="{{ path('app_recipes_favorite', {'id': recipe.id}) }}">
+												<span class="iconify icon-heart" data-icon="mdi:heart"></span>
+											</a>
+
+											<p class="nbr-likes">{{ nbrLikes }} like{{ nbrLikes > 1 ? 's' : '' }}</p>
+										</div>
 									{% else %}
-										<a class="fav-link" href="{{ path('app_recipes_favorite', {'id': recipe.id}) }}">
-											<span class="iconify icon-heart" data-icon="mdi:heart-outline"></span>
-										</a>
+										<div class="fav-action">
+											<a class="fav-link" href="{{ path('app_recipes_favorite', {'id': recipe.id}) }}">
+												<span class="iconify icon-heart" data-icon="mdi:heart-outline"></span>
+											</a>
+
+											<p class="nbr-likes">{{ nbrLikes }} like{{ nbrLikes > 1 ? 's' : '' }}</p>
+										</div>
 									{% endif %}
-
-									{% set nbrLikes = likes ?? 0 %}
-
-									<p class="nbr-likes">{{ nbrLikes }} like{{ nbrLikes > 1 ? 's' : '' }}</p>
 								{% endif %}
+
+								<div class="user-profile">
+									<p>Recipe by
+										<a href="{{ path('app_user', {'id': author.id}) }}">
+											{{ author.userIdentifier }}
+										</a>
+									</p>
+								</div>
 							</div>
+
 
 							<h5>Share</h5>
 							{% include "common/share.twig" %}

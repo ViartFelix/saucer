@@ -203,11 +203,14 @@ class RecipesController extends AbstractController
 		$repo = $entityManager->getRepository(Recipe::class);
 		$nbrLikes = $repo->getNbrLikes($id);
 
+		$author = $recipe->getIdUser();
+
 		//Single recette
 		return $this->render('recipes/single.twig', [
 			"recipe" => $recipe,
 			"favorite" => $hasFavorite,
 			"likes" => $nbrLikes,
+			"author" => $author,
 		]);
 	}
 

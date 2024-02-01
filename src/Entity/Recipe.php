@@ -18,12 +18,11 @@ class Recipe
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'recipes')]
+    #[ORM\ManyToOne(cascade: ['remove'], fetch: 'EAGER', inversedBy: 'recipes')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $idUser = null;
 
     #[ORM\Column(length: 255)]
-    //#[Assert\NotBlank()]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
@@ -44,23 +43,17 @@ class Recipe
     #[ORM\Column]
     private ?\DateTimeImmutable $updated_at = null;
 
-	/*
-    #[ORM\ManyToMany(targetEntity: Ingredients::class, mappedBy: 'idRecipe', cascade: ["persist"])]
-    private Collection $ingredients;
-	*/
-
-    #[ORM\ManyToMany(targetEntity: Ustensil::class, mappedBy: 'idRecipe', cascade: ["persist"])]
+    #[ORM\ManyToMany(targetEntity: Ustensil::class, mappedBy: 'idRecipe', cascade: ["persist", "remove"], fetch: 'EAGER')]
     private Collection $ustensils;
 
-    #[ORM\OneToMany(mappedBy: 'recipe', targetEntity: Instructions::class, cascade: ["persist"])]
+    #[ORM\OneToMany(mappedBy: 'recipe', targetEntity: Instructions::class, cascade: ["persist", "remove"], fetch: 'EAGER')]
     private Collection $instructions;
 
-    #[ORM\OneToMany(mappedBy: 'recipe', targetEntity: RecipeIngredient::class, cascade: ["persist"], fetch: 'EXTRA_LAZY')]
+    #[ORM\OneToMany(mappedBy: 'recipe', targetEntity: RecipeIngredient::class, cascade: ["persist", "remove"], fetch: 'EXTRA_LAZY')]
     private Collection $recipeIngredients;
 
     public function __construct()
     {
-        //$this->ingredients = new ArrayCollection();
 		$this->ustensils = new ArrayCollection();
 		$this->instructions = new ArrayCollection();
 		$this->recipeIngredients = new ArrayCollection();
@@ -166,32 +159,6 @@ class Recipe
     public function setUpdatedAt(\DateTimeImmutable $updated_at): static
     {
         $this->updated_at = $updated_at;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Ingredients>
-
-    public function getIngredients(): Collection
-    {
-        return $this->ingredients;
-    }
-
-    public function addIngredient(Ingredients $ingredient): static
-    {
-        if (!$this->ingredients->contains($ingredient)) {
-            $this->ingredients->add($ingredient);
-        }
-
-		$ingredient->addIdRecipe($this);
-
-        return $this;
-    }
-
-    public function removeIngredient(Ingredients $ingredient): static
-    {
-        $this->ingredients->removeElement($ingredient);
 
         return $this;
     }

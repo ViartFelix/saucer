@@ -25,7 +25,7 @@ class Instructions
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $media = null;
 
-    #[ORM\ManyToOne(cascade: ["persist"], inversedBy: 'instructions')]
+    #[ORM\ManyToOne(cascade: ["persist"], fetch: 'EAGER', inversedBy: 'instructions')]
     private ?Recipe $recipe = null;
 
 	#[NoReturn]
@@ -35,7 +35,7 @@ class Instructions
 
 	public function __toString()
 	{
-		return $this->content;
+		return $this->content ?? "";
 	}
 
     public function getId(): ?int
