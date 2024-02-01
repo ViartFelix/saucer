@@ -14,9 +14,6 @@ class Main
 	hydrate()
 	{
 		$(".add_item_link").on("click", this.addFormToCollection)
-
-		//TODO: remettre les share-buttons
-		let shareContainer = $("#to-share");
 	}
 
 	addFormToCollection(event)

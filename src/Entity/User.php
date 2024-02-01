@@ -68,7 +68,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
 		$this->setCreatedAt(DateTimeImmutable::createFromFormat('Y-m-d', date('Y-m-d')));
 		$this->setUpdatedAt(DateTimeImmutable::createFromFormat('Y-m-d', date('Y-m-d')));
-  $this->favoriteRecipes = new ArrayCollection();
+  		$this->favoriteRecipes = new ArrayCollection();
     }
 
     public function getId(): ?int

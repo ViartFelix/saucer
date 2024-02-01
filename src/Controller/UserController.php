@@ -19,14 +19,30 @@ class UserController extends AbstractController
 {
 
 	public function __construct()
-	{
+	{}
 
-	}
-
-	#[Route('/user', name: 'app_user')]
-    public function index(): Response
+	#[Route('/user/{id}', name: 'app_user')]
+    public function index(User $user): Response
     {
-        return $this->render('user/index.html.twig', [
+		$favs = $user->getFavoriteRecipes();
+		$recipes = $user->getRecipes();
+
+		$currUser = $this->getUser();
+
+		if($currUser !== null)
+		{
+			//Si le compte que l'utilisateur veut voir est le même que son propre compte.
+			if($currUser->getId() === $user->getId())
+			{
+				return $this->redirectToRoute('app_profile');
+			}
+		}
+
+        return $this->render('user/profile.twig', [
+			"user" => $user,
+			"favorites" => $favs,
+			"recipes" => $recipes,
+			"isEditable" => false,
         ]);
     }
 
@@ -41,6 +57,7 @@ class UserController extends AbstractController
 			"user" => $user,
 			"favorites" => $favs,
 			"recipes" => $recipes,
+			"isEditable" => true,
 		]);
 	}
 
@@ -92,4 +109,6 @@ class UserController extends AbstractController
 			"user" => $id,
 		]);
 	}
+
+	//TODO: faire un check du régex dans les formulaires d'emails
 }

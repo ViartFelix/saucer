@@ -8,8 +8,20 @@
 	<main class="container-translate">
 		<div class="container container-full">
 			<div class="title-btn-action">
-				<h1>Your profile</h1>
-				<a class="btn btn-large" href="{{ path('app_profile_edit') }}">Edit</a>
+
+				{% if app.user is not null %}
+					{% if app.user.userIdentifier is same as user.userIdentifier %}
+							<h1>Your profile</h1>
+						{% else %}
+							<h1>{{ user.userIdentifier }}'s profile</h1>
+					{% endif %}
+				{% else %}
+					<h1>{{ user.userIdentifier }}'s profile</h1>
+				{% endif %}
+
+				{% if isEditable %}
+					<a class="btn btn-large" href="{{ path('app_profile_edit') }}">Edit</a>
+				{% endif %}
 			</div>
 
 
