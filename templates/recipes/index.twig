@@ -8,7 +8,7 @@
 
 {% block body %}
 
-	{% set can_create_recipes = is_granted('ROLE_USER') or is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
+	{% set can_create_recipes = is_granted('ROLE_USER') or is_granted('ROLE_ADMIN') %}
 
 	<main class="container container-full container-translate">
 		<div class="title-container">
