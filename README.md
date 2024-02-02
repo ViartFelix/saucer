@@ -118,18 +118,21 @@ Paste the following commands in a terminal:
 
 
 <h4 style="text-align: center">npm</h4>
+
 ```shell
 npm run build
 npm run mails
 ```
 
 <h4 style="text-align: center">bun</h4>
+
 ```shell
 bun run build
 bun run mails
 ```
 
 <h4 style="text-align: center">yarn</h4>
+
 ```shell
 yarn run build
 yarn run mails
