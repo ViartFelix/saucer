@@ -141,11 +141,13 @@ yarn run mails
 Now, you can start the project, but for the back-end. In a new terminal, start the symfony server:
 
 <h3 style="text-align: center">Without Symfony-cli</h3>
+
 ```shell
 php -S 127.0.0.1:8000 -t public/
 ```
 
 <h3 style="text-align: center">With Symfony-cli (recommanded)</h3>
+
 ```shell
 symfony server:start
 ```
