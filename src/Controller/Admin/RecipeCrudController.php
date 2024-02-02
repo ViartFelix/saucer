@@ -66,47 +66,57 @@ class RecipeCrudController extends AbstractCrudController
 	{
 		if(!$entityInstance instanceof Recipe) return;
 
-		foreach ($entityInstance->getRecipeIngredients() as $recipeIngredient) {
-			$ingredient = $recipeIngredient->getIngredient();
-			$recipeIngredient->setIngredient($ingredient);
-		}
-
 		$entityInstance->setIdUser($this->getUser());
+		$this->handleRelations($entityInstance);
 
-		foreach ($entityInstance->getInstructions() as $instruction) {
-			//TODO: fixer le bug ici.
-			$name = $this->fileHandler->handleFile($instruction->getMediaFile());
-
-			if(!empty($name)) $instruction->setMedia($name);
-			else $instruction->setMedia(null);
-		}
-
-		$now = DateTimeImmutable::createFromFormat('Y-m-d', date('Y-m-d'));
+		$now = new DateTimeImmutable();
 		$entityInstance->setUpdatedAt($now);
 		$entityInstance->setCreatedAt($now);
 
 		parent::persistEntity($entityManager, $entityInstance);
 	}
 
-	public function updateEntity(EntityManagerInterface $entityManager, $entityInstance):void
+	public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
 	{
 		if(!$entityInstance instanceof Recipe) return;
 
-		$now = DateTimeImmutable::createFromFormat('Y-m-d', date('Y-m-d'));
+		$now = new DateTimeImmutable();
 		$entityInstance->setUpdatedAt($now);
 
+		$this->handleRelations($entityInstance);
+
+		parent::updateEntity($entityManager, $entityInstance);
+	}
+
+	public function handleRelations(&$entityInstance): void
+	{
 		foreach ($entityInstance->getRecipeIngredients() as $recipeIngredient) {
 			$ingredient = $recipeIngredient->getIngredient();
 			$recipeIngredient->setIngredient($ingredient);
 		}
 
 		foreach ($entityInstance->getInstructions() as $instruction) {
-			$name = $this->fileHandler->handleFile($instruction->getMediaFile());
+			//S'il y avait un média avant celui mis dans le panel
+			if($instruction->getMedia() !== null) {
 
-			if(!empty($name)) $instruction->setMedia($name);
-			else $instruction->setMedia(null);
+				$newFile = $instruction->getMediaFile();
+
+				//S'il y a un nouveau média, remplacer l'ancien
+				if($newFile !== null)
+				{
+					$name = $this->fileHandler->handleFile($newFile);
+					if(!empty($name)) $instruction->setMedia($name);
+					else $instruction->setMedia(null);
+				}
+
+
+			}
+			//S'il n'y avait pas de média avant la modification
+			else {
+				$name = $this->fileHandler->handleFile($instruction->getMediaFile());
+				if(!empty($name)) $instruction->setMedia($name);
+				else $instruction->setMedia(null);
+			}
 		}
-
-		parent::updateEntity($entityManager, $entityInstance);
 	}
 }
