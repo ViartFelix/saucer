@@ -39,6 +39,11 @@ class RecipeRepository extends ServiceEntityRepository
 		return sizeof($nbrLikes);
 	}
 
+	/**
+	 * Vas trouver les recettes matchant des critères données dans les filtres
+	 * @param $criteria
+	 * @return mixed
+	 */
 	public function findSearch($criteria): mixed
 	{
 		$query = $this

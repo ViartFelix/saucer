@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\Parts\UserEditType;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -66,35 +67,11 @@ class UserController extends AbstractController
 	{
 		$user = $this->getUser();
 
-		$form = $this->createFormBuilder($user)
-			->add('nom', TextType::class, [
-				"label" => "Last name",
-				"required" => false,
-				"attr" => [
-					"class" => "target-input"
-				],
-			])
-			->add('prenom', TextType::class, [
-				"label" => "First name",
-				"required" => false,
-				"attr" => [
-					"class" => "target-input"
-				],
-			])
-			->add('send', SubmitType::class, [
-				"label" => "Send",
-				"attr" => [
-					"class" => "send-btn"
-				],
-			])
-			->getForm();
-
+		$form = $this->createForm(UserEditType::class, $user);
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {
-			$now = DateTimeImmutable::createFromFormat('Y-m-d', date('Y-m-d'));
-
-			$user->setUpdatedAt($now);
+			$user->setUpdatedAt(new DateTimeImmutable());
 
 			$entityManager->persist($user);
 			$entityManager->flush();
@@ -110,5 +87,6 @@ class UserController extends AbstractController
 		]);
 	}
 
+	//TODO: faire les erreurs dans les champs des formulaires
 	//TODO: faire un check du régex dans les formulaires d'emails
 }

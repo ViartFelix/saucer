@@ -19,11 +19,13 @@
     "dev": "encore dev",
     "watch": "encore dev --watch",
     "build": "encore production --progress",
-    "mails": "maildev"
+    "mails": "maildev",
+    "start": "concurrently --kill-others \"npm run watch\" \"npm run mails\" "
   },
   "dependencies": {
     "@iconify/iconify": "^3.1.1",
     "@material/textfield": "^14.0.0",
+    "concurrently": "^8.2.2",
     "gsap": "^3.12.5",
     "iconify": "^1.4.0",
     "iconify-icon": "^1.0.8",

@@ -113,9 +113,11 @@ main.container {
 			margin-bottom: 1rem;
 		}
 
-		div#form_ustensils {
+		#recipe_ustensils {
 			display: flex;
 			justify-content: center;
+			flex-wrap: wrap;
+			gap: 0.5rem;
 		}
 
 		input[type="checkbox"] {

@@ -30,7 +30,7 @@ class UserChecker implements UserCheckerInterface
 
 		if(in_array('ROLE_NO_VERIFY', $user->getRoles()) || !$user->isVerified())
 		{
-			throw new CustomUserMessageAccountStatusException('Veuillez activer votre compte via l\'email envoyé. Vérifiez vos spams.');
+			throw new CustomUserMessageAccountStatusException('Please enable your account via the sent email. Verify your spams.');
 		}
 		else
 		{

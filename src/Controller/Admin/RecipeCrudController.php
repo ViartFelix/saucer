@@ -2,18 +2,12 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\Ingredients;
-use App\Entity\Instructions;
+
 use App\Entity\Recipe;
-use App\Entity\RecipeIngredient;
-use App\Entity\Ustensil;
 use App\Form\IngredientType;
 use App\Form\InstructionType;
-use App\Form\Type\IngredientsFormType;
 use DateTimeImmutable;
-use Doctrine\Common\Proxy\Proxy;
 use Doctrine\ORM\EntityManagerInterface;
-use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
@@ -21,11 +15,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use App\Service\FileHandler;
 
 class RecipeCrudController extends AbstractCrudController
@@ -84,6 +74,7 @@ class RecipeCrudController extends AbstractCrudController
 		$entityInstance->setIdUser($this->getUser());
 
 		foreach ($entityInstance->getInstructions() as $instruction) {
+			//TODO: fixer le bug ici.
 			$name = $this->fileHandler->handleFile($instruction->getMediaFile());
 
 			if(!empty($name)) $instruction->setMedia($name);
@@ -117,10 +108,5 @@ class RecipeCrudController extends AbstractCrudController
 		}
 
 		parent::updateEntity($entityManager, $entityInstance);
-	}
-
-	public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
-	{
-		parent::deleteEntity($entityManager, $entityInstance);
 	}
 }

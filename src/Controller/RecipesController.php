@@ -7,6 +7,7 @@ use App\Entity\Ustensil;
 use App\Form\IngredientType;
 use App\Form\InstructionType;
 use App\Form\RecipesFiltersType;
+use App\Form\RecipeType;
 use App\Form\UstensilType;
 
 use App\Repository\UserRepository;
@@ -20,6 +21,7 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,6 +34,13 @@ use DateTimeImmutable;
 
 class RecipesController extends AbstractController
 {
+
+	public function __construct(
+		private readonly SluggerInterface $slugger
+	){}
+
+
+
     #[Route('/recipes', name: 'app_recipes')]
     public function index(EntityManagerInterface $entityManager, Request $request): Response
     {
@@ -45,10 +54,12 @@ class RecipesController extends AbstractController
 		]);
 		$form->handleRequest($request);
 
+		//Prise de toutes les recettes
 		$filteredRecipes = $repo->findAll();
 
 		if($form->isSubmitted() && $form->isValid())
 		{
+			//Prise des données du formulaire
 			$criteria = $form->getData();
 			$filteredRecipes = $repo->findSearch($criteria);
 		}
@@ -59,155 +70,91 @@ class RecipesController extends AbstractController
 		]);
     }
 
-	//Créer une recette
 	#[Route('/recipes/new', name: 'app_recipes_create')]
 	public function create(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
 	{
 		$recipe = new Recipe();
 
-		$form = $this->createFormBuilder($recipe)
-			->add('title', TextType::class, [
-				"label" => "Title",
-				"attr" => [
-					"class" => "target-input",
-				],
-				"required" => false,
-			])
-			->add('description', TextareaType::class, [
-				"label" => "Description",
-				"attr" => [
-					"class" => "target-input",
-				],
-				"required" => false,
-			])
-			->add('instructions', CollectionType::class, [
-				"entry_type" => InstructionType::class,
-				'entry_options' => [
-					"required" => false,
-				],
-				'prototype' => true,
-				"allow_add" => true,
-				'by_reference' => false,
-			])
-			->add('ustensils', null, [
-				'choice_label' => 'nom',
-				'multiple' => true,
-				'expanded' => true,
-			])
-			->add('recipeIngredients', CollectionType::class, [
-				"entry_type" => IngredientType::class,
-				'entry_options' => [
-					"required" => false,
-				],
-				'prototype' => true,
-				"allow_add" => true,
-				'by_reference' => false,
-				"mapped" => false,
-			])
-			->add('prep_time', NumberType::class, [
-				"label" => "Preparation time",
-				"attr" => [
-					"class" => "target-input",
-				],
-				"required" => true,
-			])
-			->add('cook_time', NumberType::class, [
-				"label" => "Cooking time",
-				"attr" => [
-					"class" => "target-input",
-				],
-				"required" => true,
-			])
-			->add('thumbnail', FileType::class, [
-				"label" => "Photo",
-				"required" => false,
-				'mapped' => false,
-				'constraints' => [
-					new File([
-						'maxSize' => '4096k',
-						'mimeTypes' => [
-							'image/gif',
-							'image/jpeg',
-							'image/png',
-							'image/webp',
-						],
-						'mimeTypesMessage' => 'Please select a valid image (.png, .jpg, .jpeg or .webp) and bellow 4Mb',
-					])
-				],
-			])
-			->add('send', SubmitType::class, [
-				"attr" => [
-					"class" => "btn btn-large"
-				]
-			])
-			->getForm();
-
+		$form = $this->createForm(RecipeType::class, $recipe);
 		$form->handleRequest($request);
 
 		if ($form->isSubmitted() && $form->isValid()) {
 			//Set de l'ID user
 			$recipe->setIdUser($this->getUser());
-			//$ustensiles = $recipe->getUstensils();
 
 			$thumbnail = $form->get('thumbnail')->getData();
 
+			//si la minitaure est présente dans le formulaire
 			if($thumbnail)
 			{
-				$ogFileName = pathinfo($thumbnail->getClientOriginalName(), PATHINFO_FILENAME);
-				$safeFilename = $slugger->slug($ogFileName);
-				$newFilename = $safeFilename.'-'.uniqid().'.'.$thumbnail->guessExtension();
-
-				$thumbnail->move(
-					$this->getParameter("photo_recipes"),
-					$newFilename,
-				);
-
-				//$instruction set thumbnail
-				$recipe->setThumbnail($newFilename);
+				$handler = new FileHandler($slugger);
+				$recipe->setThumbnail($handler->handleFile($thumbnail) ?? null);
 			}
 
-			foreach ($recipe->getInstructions() as $key => $instruction) {
-				$file = $form->get('instructions')[$key]->get('mediaFile')->getData();
-
-				if(isset($file))
-				{
-					$uploader = new FileHandler($slugger);
-					$name = $uploader->handleFile($file);
-					$instruction->setMedia($name);
-				}
-			}
-
-			// Ajouter les ustensiles à la recette à partir des données du formulaire
-			foreach ($form->get('ustensils')->getData() as $ustensil) {
-				$recipe->addUstensil($ustensil);
-			}
-
-
-			foreach($form->get('recipeIngredients')->getData() as $key => $recipeIngredient) {
-				$ingredient = $form->get('recipeIngredients')[$key]->get('ingredient')->getData() ?? null;
-				$recipeIngredient->setIngredient($ingredient);
-				$recipe->addRecipeIngredient($recipeIngredient);
-			}
-
-			$entityManager->persist($recipe);
+			$this->handleRelations($form, $recipe);
 
 			try {
+				$entityManager->persist($recipe);
 				$entityManager->flush();
-			} catch (\Exception $e) {
-				// Gérer les exceptions ou les erreurs ici
-				dd($e->getMessage());
-				// Arrêtez l'exécution ou redirigez vers une page d'erreur
-			}
 
-			return $this->redirectToRoute('app_home');
+				return $this->redirectToRoute('app_recipes_single', ["id" => $recipe->getId()]);
+			} catch (\Exception $e) {
+				return $this->render('recipes/create.twig', [
+					"form" => $form,
+					"errors" => "An unknown error happened. Please retry in a couple of moments."
+				]);
+			}
 		}
 
 		return $this->render('recipes/create.twig', [
-			"form" => $form,
+			"form" => $form->createView(),
+			"errors" => null,
 		]);
 	}
 
-	//Voir une seule recette
+	/**
+	 * Vas, lors de la création de la recette, essayer d'écrire et de gérer les relations : ustensils, ingredients et instructions
+	 * @param FormInterface $form
+	 * @param Recipe $recipe
+	 * @return void
+	 */
+	private function handleRelations(FormInterface &$form, Recipe &$recipe): void
+	{
+
+		//Rajout des instructions
+		foreach ($recipe->getInstructions() as $key => $instruction) {
+			$file = $form->get('instructions')[$key]->get('mediaFile')->getData();
+
+			if(isset($file))
+			{
+				$uploader = new FileHandler($this->getSlugger());
+				$instruction->setMedia($uploader->handleFile($file) ?? null);
+			}
+
+			$recipe->addInstruction($instruction);
+		}
+
+		// Ajouter les ustensiles à la recette à partir des données du formulaire
+		foreach ($form->get('ustensils')->getData() as $ustensil) {
+			$recipe->addUstensil($ustensil);
+		}
+
+		//Idem avec les ingredients
+		foreach($form->get('recipeIngredients')->getData() as $key => $recipeIngredient) {
+			$ingredient = $form->get('recipeIngredients')[$key]->get('ingredient')->getData() ?? null;
+
+			if(isset($ingredient))
+			{
+				$recipeIngredient->setIngredient($ingredient);
+				$recipe->addRecipeIngredient($recipeIngredient);
+			}
+		}
+	}
+
+	/**
+	 * Voir une seule recette
+	 * @throws Exception
+	 */
 	#[Route('/recipes/{id}', name: 'app_recipes_single')]
 	public function single(Recipe $recipe, int $id, EntityManagerInterface $entityManager): Response
 	{
@@ -248,14 +195,22 @@ class RecipesController extends AbstractController
 
 		$entityManager->persist($user);
 
+		$errors = null;
+
 		try {
 			$entityManager->flush();
 		} catch (\Exception $e) {
-			dd($e->getMessage());
+			$errors = "An unknown error happened. Please try again in a few moments.";
 		}
 
 		return $this->redirectToRoute("app_recipes_single",[
-			"id" => $id
+			"id" => $id,
+			"errors" => $errors,
 		]);
+	}
+
+	private function getSlugger(): SluggerInterface
+	{
+		return $this->slugger;
 	}
 }

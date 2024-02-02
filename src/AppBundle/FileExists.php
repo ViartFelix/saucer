@@ -16,7 +16,7 @@ class FileExists extends AbstractExtension
 
 
 	public function __construct(
-		private Filesystem $fs
+		private readonly Filesystem $fs
 	){
 		$this->photo_recipes = './uploads/recipes/';
 	}

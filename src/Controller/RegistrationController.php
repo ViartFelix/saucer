@@ -67,7 +67,7 @@ class RegistrationController extends AbstractController
 				$a = "OK";
 			} catch (\Exception $e) {
 				// $a = $e->getMessage();
-				$a = "Erreur inconnue";
+				$a = "Unknown error.";
 			}
 
             // do anything else you need here, like send an email
@@ -104,9 +104,8 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_register');
         }
 
-        // @TODO Change the redirect on success and handle or remove the flash message in your templates
         $this->addFlash('success', 'Your email address has been verified.');
 
-        return $this->redirectToRoute('app_register');
+        return $this->redirectToRoute('app_login');
     }
 }
