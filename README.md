@@ -90,6 +90,7 @@ symfony console doctrine:fixtures:load
 
 <h3 style="text-align: center">Ingredients</h3>
 21 ingredients to choose from:
+
 - Flour
 - Vinegar
 - Cooking oil
